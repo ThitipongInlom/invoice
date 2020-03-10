@@ -45,7 +45,7 @@ axios({
         var i = index + 1;
         var table = "<tr>" +
             "<th class='text-center'>" + i + "</th>" +
-            "<td>" + formatNumber(value.list_item) + "</td>" +
+            "<td>" + value.list_item + "</td>" +
             "<td class='text-right' style='padding-right: 5px;'>" + formatNumber(value.money) + "</td>" +
             "</tr>";
         $("#view_modal_table1").append(table);
@@ -55,11 +55,22 @@ axios({
         var i = index + 1;
         var table = "<tr>" +
             "<th class='text-center'>" + i + "</th>" +
-            "<td>" + formatNumber(value.list_item) + "</td>" +
+            "<td>" + value.list_item + "</td>" +
             "<td class='text-right' style='padding-right: 5px;'>" + formatNumber(value.money) + "</td>" +
             "</tr>";
         $("#view_modal_table2").append(table);
     });
+    // เพิ่มช่องว่าง
+    var count_td_blank = parseInt(21) - parseInt(response.data.invoiceitem.length);
+    for (i_bank = 1; i_bank < count_td_blank; i_bank++) {
+        var table_blank = "<tr>" +
+            "<th class='text-center'>&nbsp</th>" +
+            "<td></td>" +
+            "<td class='text-right' style='padding-right: 5px;'></td>" +
+            "</tr>";
+        $("#view_modal_table1").append(table_blank);
+        $("#view_modal_table2").append(table_blank);
+    }
     // ตั้งค่าส่วน Table Foot
     $(response.data.invocedata).each(function (index, value) {
         $(".view_modal_full_money").html(formatNumber(value.full_money));
@@ -70,11 +81,12 @@ axios({
     $(".view_cover_invoicebath").html(response.data.cover_invoicebath);
 
     window.print();
+    window.onafterprint = window.close();
 })
 .catch(function (error) {
     console.log(error);
 });
 
 var formatNumber = function formatNumber(num) {
-    return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
+    return parseFloat(num).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')
 }

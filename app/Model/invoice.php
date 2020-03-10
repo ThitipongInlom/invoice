@@ -24,7 +24,8 @@ class invoice extends Model
         'not_vat_money',
         'vat_money',
         'type_vat',
-        'status_invoice'
+        'status_invoice',
+        'user_create'
     ];
 
      /**

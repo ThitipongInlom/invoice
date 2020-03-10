@@ -11,7 +11,7 @@
     </head>
     <body class="A4">
         <input type="hidden" id="api_print_invoice_no" value="{{ $invoice_no }}">
-        <section class="sheet padding-10mm">
+        <section class="sheet padding-20mm">
             <div class="row">
                 <!-- ข้อมูล บนซ้ายมือ -->
                 <div class="col-6 col-md-7">
@@ -105,7 +105,7 @@
                 <p class="mb-0" style="font-size:14px"><b>ในกรณีชำระเป็นเช็ค ใบเสร็จฉบับนี้จะสมบูรณ์ก็ต่อเมื่อเรียกเก็บเงินตามเช็คได้เรียบร้อยแล้ว</b></p>
             </div>
         </section>
-        <section class="sheet padding-10mm">
+        <section class="sheet padding-20mm">
             <div class="row">
                 <!-- ข้อมูล บนซ้ายมือ -->
                 <div class="col-6 col-md-7">

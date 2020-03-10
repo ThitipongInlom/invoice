@@ -113,7 +113,7 @@
                                                 </div>                                  
                                             </div>
                                             <div class="form-group col-md-2">
-                                                <input type="number" class="form-control form-control-sm" min="0" id="money_count" placeholder="จำนวนเงิน">
+                                                <input type="number" class="form-control form-control-sm" min="1" id="money_count" placeholder="จำนวนเงิน">
                                             </div>
                                             <div class="form-group col-md-2">
                                                 <button type="button" class="btn btn-sm btn-block btn-info" onclick="Add_display_item();"><i class="fas fa-plus"></i> ทำรายการเพิ่ม</button>

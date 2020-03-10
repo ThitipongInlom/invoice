@@ -25,7 +25,10 @@ class dashboard extends Controller
     {
         $invoice = invoice::where('hotel', $request->get('hotel'))->get();
         return Datatables::of($invoice)
-            ->editColumn('invoice_address', '{!! Str::limit($invoice_address, 30) !!}')
+            ->editColumn('invoice_address', function($invoice) {
+                $result = $invoice->invoice_compary.' | '.$invoice->invoice_address;
+                return Str::limit($result, 30);
+            })
             ->addColumn('action', function ($invoice) {
                 $btn  = "<button class='btn btn-xs btn-dark' onclick='Api_print_invoice(this);' invoice_no='$invoice->invoice_no'><i class='fas fa-print'></i></button> ";
                 $btn .= "<button class='btn btn-xs btn-primary' onclick='Open_view_invoice(this);' invoice_no='$invoice->invoice_id'><i class='fas fa-search'></i></button> ";

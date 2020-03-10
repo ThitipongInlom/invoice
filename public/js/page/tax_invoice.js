@@ -351,12 +351,12 @@ var Get_tfoot_data = function Get_tfoot_data(e) {
     var table_ex = "<tr class='text-right table-secondary'>" +
                 "<td colspan='2'></td>" +
                 "<td>รวมเงิน</td>" + 
-                "<td><b id='full_money'>" + not_vat_money.toFixed(2) + "</b> บาท</td>" +
+                "<td><b id='full_money'>" + not_vat_money + "</b> บาท</td>" +
                 "</tr>" +
                 "<tr class='text-right table-secondary'>" +
                 "<td colspan='2'></td>" +
                 "<td class='text-right'>ภาษีมูลค่าเพิ่ม 7%</td>" +
-                "<td><b id='not_vat_money'>" + vat_money.toFixed(2) + "</b> บาท</td>" +
+                "<td><b id='not_vat_money'>" + vat_money + "</b> บาท</td>" +
                 "</tr>" +
                 "<tr class='text-right table-secondary'>" +
                 "<td colspan='2'></td>" +
@@ -366,12 +366,12 @@ var Get_tfoot_data = function Get_tfoot_data(e) {
     var table_in = "<tr class='text-right table-secondary'>" +
                 "<td colspan='2'></td>" +
                 "<td>รวมเงิน</td>" +
-                "<td><b id='full_money'>" + full_money.toFixed(2) + "</b> บาท</td>" +
+                "<td><b id='full_money'>" + full_money + "</b> บาท</td>" +
                 "</tr>" +
                 "<tr class='text-right table-secondary'>" +
                 "<td colspan='2'></td>" +
                 "<td class='text-right'>ภาษีมูลค่าเพิ่ม 7%</td>" +
-                "<td><b id='not_vat_money'>" + vat_7.toFixed(2) + "</b> บาท</td>" +
+                "<td><b id='not_vat_money'>" + vat_7 + "</b> บาท</td>" +
                 "</tr>" +
                 "<tr class='text-right table-secondary'>" +
                 "<td colspan='2'></td>" +

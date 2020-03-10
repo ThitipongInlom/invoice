@@ -58,6 +58,7 @@ class tax_invoice extends Controller
             $invoice = new invoice;
             $invoice->invoice_no = $invoice_no;
             $invoice->hotel      = $request->select_hotel;
+            $invoice->user_create= Auth::user()->username;
             $invoice->save();
             $insertedId = $invoice->invoice_id;
 
@@ -209,6 +210,7 @@ class tax_invoice extends Controller
     public function Edit_invoice_on(Request $request)
     {
         $row_data = invoice::where('invoice_no', $request->no_invoice)->get();
+        $auth_user = Auth::user()->username;
         foreach ($row_data as $key => $row) {
             $address_log = $row->address_no != $request->address_no ? '"address_no": "'.$request->address_no.'",' : "";
             $ref_no_log  = $row->ref_no != $request->ref_no ? '"ref_no": "'.$request->ref_no.'",' : "";
@@ -217,9 +219,10 @@ class tax_invoice extends Controller
             $full_money_log = $row->full_money != $request->full_money ? '"full_money": "'.$request->full_money.'",' : "";
             $not_vat_money_log = $row->not_vat_money != $request->not_vat_money ? '"not_vat_money": "'.$request->not_vat_money.'","' : "";
             $vat_money_log = $row->vat_money != $request->vat_money ? '"vat_money: "'.$request->vat_money.'",' : "";
-            $type_vat_log = $row->type_vat != $request->type_vat ? '"type_vat": "'.$request->type_vat.'"' : "";
+            $type_vat_log = $row->type_vat != $request->type_vat ? '"type_vat": "'.$request->type_vat.'",' : "";
+            $user_action = '"user_action": "'.$auth_user.'"';
 
-            $setting_log = $address_log.$ref_no_log.$invoice_compary_log.$invoice_address_log.$full_money_log.$not_vat_money_log.$vat_money_log.$type_vat_log;
+            $setting_log = $address_log.$ref_no_log.$invoice_compary_log.$invoice_address_log.$full_money_log.$not_vat_money_log.$vat_money_log.$type_vat_log.$user_action;
         }
 
         if ($setting_log == '') {
@@ -228,7 +231,6 @@ class tax_invoice extends Controller
             $set_log = "{".$setting_log."}";
         }
 
-        $auth_user = Auth::user()->username;
         $log_data_old = "null";
         $log_data_new = $set_log;
         $action_log = new log;

@@ -29,14 +29,14 @@ var table_dashboard = function table_dashboard() {
             "data": 'invoice_address',
             "name": 'invoice_address',
         }, {
-            "data": 'type_vat',
-            "name": 'type_vat',
-        }, {
             "data": 'vat_money',
             "name": 'vat_money',
+            "render": function (data) {
+                return formatNumber(data);
+            },
         }, {
-            "data": 'hotel',
-            "name": 'hotel',
+            "data": 'user_create',
+            "name": 'user_create',
         }, {
             "data": 'action',
             "name": 'action',
@@ -46,10 +46,10 @@ var table_dashboard = function table_dashboard() {
                 "targets": []
             }, {
                 "className": 'text-center',
-                "targets": []
+                "targets": [3]
             }, {
                 "className": 'text-right',
-                "targets": []
+                "targets": [2]
             }, {
                 "className": 'text-truncate',
                 "targets": []
@@ -129,7 +129,7 @@ var Open_view_invoice = function Open_view_invoice(e) {
             var i = index + 1;
             var table = "<tr>" + 
                             "<th class='text-center'>" + i + "</th>" +
-                            "<td>" + formatNumber(value.list_item) + "</td>" +
+                            "<td>" + value.list_item + "</td>" +
                             "<td class='text-right' style='padding-right: 5px;'>" + formatNumber(value.money) + "</td>" +
                         "</tr>";
             $("#view_modal_table").append(table);
@@ -265,7 +265,7 @@ var Save_cancel_invoice = function Save_cancel_invoice() {
 }
 
 var formatNumber = function formatNumber(num) {
-    return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
+    return parseFloat(num).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')
 }
 
 var Set_axios_data = function Set_axios_data(array) {

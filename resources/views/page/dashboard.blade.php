@@ -22,12 +22,14 @@
                     <div class="container-fluid">
                         <div class="row mb-2">
                             <div class="col-sm-6">
-                                <h1>Dashboard</h1>
+                                <h1>List Invoice</h1>
                             </div>
                             <div class="col-sm-6">
+                                <!--
                                 <ol class="breadcrumb float-sm-right">
                                     <li class="breadcrumb-item active">Dashboard</li>
                                 </ol>
+                                -->
                             </div>
                         </div>
                     </div>
@@ -47,12 +49,11 @@
                                         <table class="table table-sm dt-responsive nowrap row-border table-bordered table-hover" cellspacing="0" cellpadding="0" id="table_dashboard" width="100%">
                                             <thead>
                                                 <tr class="bg-primary">
-                                                    <th>เลข Invoice</th>
-                                                    <th>รายการที่ 2</th>
-                                                    <th>รายการที่ 3</th>
-                                                    <th>รายการที่ 4</th>
-                                                    <th>รายการที่ 5</th>
-                                                    <th>เครื่องมือ</th>
+                                                    <th>Invoice</th>
+                                                    <th>Company</th>
+                                                    <th>TotolVat</th>
+                                                    <th>Create</th>
+                                                    <th>Tool</th>
                                                 </tr>
                                             </thead>
                                             <tbody></tbody>

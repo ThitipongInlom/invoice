@@ -23,13 +23,13 @@
                         <li class="nav-item">
                             <a href="{{ url('/') }}" class="nav-link {{ Request::is('/') ? 'active' : '' }}">
                                 <i class="far fa-circle nav-icon"></i>
-                                <p>แผงควบคุม</p>
+                                <p>List Invoice</p>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="{{ url('/tax_invoice') }}" class="nav-link {{ Request::is('tax_invoice') ? 'active' : '' }}">
                                 <i class="far fa-circle nav-icon"></i>
-                                <p>ใบกำกับภาษี</p>
+                                <p>Create Invoice</p>
                             </a>
                         </li>
                     </ul>
@@ -46,7 +46,7 @@
                         <li class="nav-item">
                             <a href="{{ url('user') }}" class="nav-link {{ Request::is('user') ? 'active' : '' }}">
                                 <i class="far fa-circle nav-icon"></i>
-                                <p>ข้อมูลพนักงาน</p>
+                                <p>Setting User</p>
                             </a>
                         </li>
                         <li class="nav-item">
