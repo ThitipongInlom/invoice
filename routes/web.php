@@ -25,7 +25,6 @@ Route::group(['prefix' => 'api/v1'], function () {
     Route::post('/Save_search_address', 'page\tax_invoice@Save_search_address');
     Route::post('/Save_add_list_tax', 'page\tax_invoice@Save_add_list_tax');
     Route::post('/Save_invoice_item', 'page\tax_invoice@Save_invoice_item');
-    Route::post('/Save_invoice_on', 'page\tax_invoice@Save_invoice_on');
     Route::post('/Del_tbody_data_item', 'page\tax_invoice@Del_tbody_data_item');
     Route::post('/Del_tbody_data_all', 'page\tax_invoice@Del_tbody_data_all');
     Route::post('/Get_create_tax_no', 'page\tax_invoice@Get_create_tax_no');
@@ -36,6 +35,9 @@ Route::group(['prefix' => 'api/v1'], function () {
     Route::post('/Api_print_invoice', 'page\api_print@Open_view_invoice');
     Route::post('/Save_cancel_invoice', 'page\dashboard@Save_cancel_invoice');
     Route::post('/Save_edit_invoice', 'page\dashboard@Save_edit_invoice');
-    Route::post('/Edit_invoice_on', 'page\tax_invoice@Edit_invoice_on');
     Route::post('/Get_log_invoice', 'page\tax_invoice@Get_log_invoice');
+    Route::post('/Save_ref_no', 'page\tax_invoice@Save_ref_no');
+    Route::post('/Save_vat_invoice', 'page\tax_invoice@Save_vat_invoice');
+    Route::post('/Get_list_address', 'page\tax_invoice@Get_list_address');
+
 });

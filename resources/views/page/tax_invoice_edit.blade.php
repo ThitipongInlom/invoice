@@ -60,7 +60,7 @@
                                                 <b>Ref : </b>
                                             </div>
                                             <div class="form-group col-md-4">
-                                                <input type="text" class="form-control form-control-sm" id="ref_no" value="{{ $row->ref_no }}">
+                                                <input type="text" class="form-control form-control-sm" id="ref_no" value="{{ $row->ref_no }}" onchange="Save_ref_no()">
                                             </div>
                                         </div>
                                         <div class="form-row">
@@ -144,11 +144,8 @@
                                 <div class="card">
                                     <div class="card-body">
                                         <div class="row">
-                                            <div class="col-md-6 text-center">
-                                                <button type="button" class="btn btn-sm btn-block btn-danger" onclick="window.history.back();"><i class="fas fa-door-open"></i> ออกไม่แก้ไข</button>
-                                            </div>
-                                            <div class="col-md-6 text-center">
-                                                <button type="button" class="btn btn-sm btn-block btn-warning" onclick="Edit_invoice_on();"><i class="fas fa-save"></i> ยืนยันแก้ไข</button>
+                                            <div class="col-12 col-md-12 text-center">
+                                                <button type="button" class="btn btn-sm btn-block btn-primary" onclick="window.history.back();"><i class="fas fa-door-open"></i> หน้าหลัก</button>
                                             </div>
                                         </div>
                                     </div>
@@ -313,7 +310,7 @@
 
                 <!-- Modal -->
                 <div class="modal fade" id="history_modal" tabindex="-1" role="dialog" aria-labelledby="history_modalLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
                         <div class="modal-content">
                             <div class="modal-header bg-dark mb-2 pb-2">
                                 <h5 class="modal-title" id="history_modalLabel"><i class="fas fa-history"></i> ประวัติ History</h5>
@@ -337,7 +334,7 @@
                                         </table>                                    
                                     </div>
                                     <div class="col-6 col-md-6">
-                                        <div class="card">
+                                        <div class="card sticky-top mr-0 pr-0">
                                             <div class="card-body">
                                                 <p class="text-center mb-0"><b>เลือกรายการจากทางด้านซ้ายมือ !</b></p>
                                                 <hr class="mb-1 mt-1">

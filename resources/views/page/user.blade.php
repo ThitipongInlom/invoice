@@ -145,6 +145,33 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="modal_edit_user" tabindex="-1" role="dialog" aria-labelledby="modal_edit_userLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header bg-warning">
+                                    <h5 class="modal-title" id="modal_edit_userLabel">แก้ไข User</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    
+                                </div>
+                                <div class="modal-footer" style='display:inline;'>
+                                    <div class="row">
+                                        <div class="col-6 col-md-6">
+                                            <button type="button" class="btn btn-sm btn-block btn-danger" data-dismiss="modal">Close</button>    
+                                        </div>
+                                        <div class="col-6 col-md-6">
+                                            <button type="button" class="btn btn-sm btn-block btn-success">Save changes</button>    
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             @include('layout/footer')
         </div>

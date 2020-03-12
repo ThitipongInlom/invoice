@@ -62,57 +62,31 @@ var Save_search_address = function Save_search_address() {
     var Toastr = Set_Toastr();
     var value = $("#search_select_address").val();
     if (value != null) {
-        var data = {
-            search_select_address: $("#search_select_address").val(),
-        };
-        axios({
-            method: 'post',
-            url: 'api/v1/Set_data_display',
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            data: data
-        })
-        .then(function (response) {
-            console.log(response);
-            $("#company").val(response.data.results.company_name);
-            $("#address").val(response.data.results.company_address);
-            $("#company_type").val(response.data.results.type_address);
-            $("#phone_show").val(response.data.results.phone);
-            $("#address_no").val(response.data.results.address_id);
-            $("#search_address_modal").modal('hide');
-        })
-        .catch(function (error) {
-            console.log(error);
-        });
+        if ($("#no_invoice").val() == '') {
+            this.Create_tax_no();
+            setTimeout(function () {
+                this.Save_search_address_update();
+            }, 500);
+        }else{
+            this.Save_search_address_update();
+            Toastr["success"]("อัพเดต บริษัท / ลูกค้า เสร็จสิ้น");
+        }
     }else {
         Toastr["error"]("กรุณาเลือก บริษัท / ลูกค้า");
     }
 }
 
-var Save_invoice_on = function Save_invoice_on() {
+var Save_ref_no = function Save_ref_no() {
     var Toastr = Set_Toastr();
-    if ($("#no_invoice").val() == '') {
-        Toastr["error"]("กรุณา สร้าง Tax No");
-    } else if ($("#company").val() == '' || $("#address").val() == '') {
-        Toastr["error"]("กรุณาเลือก บริษัท / ลูกค้า");
-    } else if ($(".tbody_data").length == '0') {
-        Toastr["error"]("กรุณา เพิ่มรายการ");
-    }else{
+    // เช็คว่ามี tax_invoice หรือป่าว
+    if ($("#no_invoice").val() != '') {
         var data = {
-            no_invoice: $("#no_invoice").val(),
             ref_no: $("#ref_no").val(),
-            company: $("#company").val(),
-            address: $("#address").val(),
-            type_vat: $("input[name=vat_radio]:checked").val(),
-            full_money: $("#full_money").text(),
-            not_vat_money: $("#not_vat_money").text(),
-            vat_money: $("#vat_money").text(),
-            address_no: $("#address_no").val()
+            no_invoice: $("#no_invoice").val(),
         };
         axios({
             method: 'post',
-            url: 'api/v1/Save_invoice_on',
+            url: 'api/v1/Save_ref_no',
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
@@ -120,12 +94,46 @@ var Save_invoice_on = function Save_invoice_on() {
         })
         .then(function (response) {
             console.log(response);
-            window.location.href = response.data.path + '/';
+            Toastr[response.data.status](response.data.error_text);
         })
         .catch(function (error) {
             console.log(error);
         });
+    } else {
+        Toastr["error"]("กรุณาสร้าง Tax No");
+        $("#ref_no").val('');
     }
+}
+
+var Save_search_address_update = function Save_search_address_update() {
+    var data = {
+        search_select_address: $("#search_select_address").val(),
+        no_invoice: $("#no_invoice").val(),
+    };
+    axios({
+        method: 'post',
+        url: 'api/v1/Set_data_display',
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        data: data
+    })
+    .then(function (response) {
+        console.log(response);
+        $(response.data.results).each(function (index, value) {
+            $("#company").val(value.company_name);
+            $("#address").val(value.company_address);
+            $("#company_type").val(value.type_address);
+            $("#phone_show").val(value.phone);
+            $("#address_no").val(value.address_id);
+        });
+        $("#search_address_modal").modal('hide');
+    })
+    .catch(function (error) {
+        console.log(error);
+    });
+
+    return;
 }
 
 var Create_tax_no = function Create_tax_no() {
@@ -176,6 +184,44 @@ var Open_modal_add_address = function Open_modal_add_address() {
         $(".branch_company").hide();
         $("[name=radio_company]").val(["company"]);
     });
+}
+
+var Open_modal_edit_address = function Open_modal_edit_address(e) {
+    $("#table_list_address_modal").modal('hide');
+    console.log(e);
+    $("#edit_address_modal").modal('show');
+}
+
+var Open_modal_table_list_address = function Open_modal_table_list_address() {
+    axios({
+        method: 'post',
+        url: 'api/v1/Get_list_address',
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    })
+    .then(function (response) {
+        console.log(response);
+        $("#table_list_address_body").html('');
+        var i = 1;
+        $.each(response.data.result, function (key, value) {
+            var btn_edit = '<button class="btn btn-sm btn-warning" address_id="' + value.address_id + '" onclick="Open_modal_edit_address(this);"><i class="fas fa-edit"></i> แก้ไข</button>';
+            var btn_del = '<button class="btn btn-sm btn-danger"><i class="fas fa-trash"></i> ลบ</button>';
+            var table = "<tr>" +
+                        "<td class='text-center'>"+ i +"</td>" +
+                        "<td>" + value.company_name + "</td>" +
+                        "<td>" + value.company_address + "</td>" +
+                        "<td class='text-center'>" + btn_edit + " " + btn_del + "</td>" +
+                        "</tr>";
+
+            $("#table_list_address_body").append(table);
+            i++;
+        });
+    })
+    .catch(function (error) {
+        console.log(error);
+    });
+    $("#table_list_address_modal").modal('show');
 }
 
 var Save_modal_search_address = function Save_modal_search_address() {
@@ -333,6 +379,7 @@ var Get_tbody_data = function Get_tbody_data() {
             });
         }
         Get_tfoot_data(response.data);
+        Save_vat_invoice();
     })
     .catch(function (error) {
         console.log(error);
@@ -351,32 +398,32 @@ var Get_tfoot_data = function Get_tfoot_data(e) {
     var table_ex = "<tr class='text-right table-secondary'>" +
                 "<td colspan='2'></td>" +
                 "<td>รวมเงิน</td>" + 
-                "<td><b id='full_money'>" + not_vat_money + "</b> บาท</td>" +
+                "<td><b id='full_money'>" + formay_number(not_vat_money) + "</b> บาท</td>" +
                 "</tr>" +
                 "<tr class='text-right table-secondary'>" +
                 "<td colspan='2'></td>" +
                 "<td class='text-right'>ภาษีมูลค่าเพิ่ม 7%</td>" +
-                "<td><b id='not_vat_money'>" + vat_money + "</b> บาท</td>" +
+                "<td><b id='not_vat_money'>" + formay_number(vat_money) + "</b> บาท</td>" +
                 "</tr>" +
                 "<tr class='text-right table-secondary'>" +
                 "<td colspan='2'></td>" +
                 "<td class='text-right'>ยอดเงินรับสุทธิ</td>" +
-                "<td><b id='vat_money'>" + full_money + "</b> บาท</td>" +
+                "<td><b id='vat_money'>" + formay_number(full_money) + "</b> บาท</td>" +
                 "</tr>";
     var table_in = "<tr class='text-right table-secondary'>" +
                 "<td colspan='2'></td>" +
                 "<td>รวมเงิน</td>" +
-                "<td><b id='full_money'>" + full_money + "</b> บาท</td>" +
+                "<td><b id='full_money'>" + formay_number(full_money) + "</b> บาท</td>" +
                 "</tr>" +
                 "<tr class='text-right table-secondary'>" +
                 "<td colspan='2'></td>" +
                 "<td class='text-right'>ภาษีมูลค่าเพิ่ม 7%</td>" +
-                "<td><b id='not_vat_money'>" + vat_7 + "</b> บาท</td>" +
+                "<td><b id='not_vat_money'>" + formay_number(vat_7) + "</b> บาท</td>" +
                 "</tr>" +
                 "<tr class='text-right table-secondary'>" +
                 "<td colspan='2'></td>" +
                 "<td class='text-right'>ยอดเงินรับสุทธิ</td>" +
-                "<td><b id='vat_money'>" + monry_vat + "</b> บาท</td>" +
+                "<td><b id='vat_money'>" + formay_number(monry_vat) + "</b> บาท</td>" +
                 "</tr>";
     if (sum_money > 0) {
         if ($("input[name=vat_radio]:checked").val() == 'ex_vat') {
@@ -384,6 +431,32 @@ var Get_tfoot_data = function Get_tfoot_data(e) {
         }else {
             $("#table_list_menu_foot").append(table_in);
         }
+    }
+}
+
+var Save_vat_invoice = function Save_vat_invoice() {
+    var data = {
+        no_invoice: $("#no_invoice").val(),
+        full_money: $("#full_money").text(),
+        not_vat_money: $("#not_vat_money").text(),
+        vat_money: $("#vat_money").text(),
+        type_vat: $("input[name=vat_radio]:checked").val(),
+    };
+    if ($("#no_invoice").val() != '') {
+        axios({
+            method: 'post',
+            url: 'api/v1/Save_vat_invoice',
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            data: data
+        })
+        .then(function (response) {
+            console.log(response);
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
     }
 }
 
@@ -431,6 +504,10 @@ var Del_tbody_data_all = function Del_tbody_data_all() {
 
 var format = function format(x) {
     return x.text;
+}
+
+var formay_number = function formay_number(number) {
+    return Math.round(number.toFixed(2) * 100) / 100;
 }
 
 var Check_null_input = function Check_null_input(Array_id) {

@@ -97,6 +97,11 @@ var Open_modal_add_user = function Open_modal_add_user() {
     });
 }
 
+var Open_modal_edit_user = function Open_modal_edit_user() {
+    $("#modal_edit_user").modal('show');
+    console.log('AAAA');
+}
+
 var Save_modal_add_user = function Save_modal_add_user() {
     var Toastr = Set_Toastr();
     var array = [

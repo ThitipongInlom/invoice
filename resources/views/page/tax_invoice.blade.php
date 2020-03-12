@@ -17,9 +17,7 @@
                         <div class="container-fluid">
                             <div class="row mb-2">
                                 <div class="col-sm-6">
-                                    <h1>Tax Invoice 
-                                    <button type="button" class="btn btn-sm btn-success" id="btn_create_tax_no" onclick="Create_tax_no();"><i class="fas fa-plus"></i> สร้าง Tax</button>
-                                    </h1>
+                                    <h1>Tax Invoice</h1>
                                 </div>
                                 <div class="col-sm-6">
                                     <!--
@@ -45,8 +43,11 @@
                                                 <input type="text" class="form-control form-control-sm" id="no_invoice" disabled>
                                             </div>
                                             <div class="form-group col-md-6">
-                                                <button type="button" class="btn btn-sm btn-secondary" onclick="Open_modal_search_address();"><i class="fas fa-search"></i> ค้นหาลูกค้า</button>
-                                                <button type="button" class="btn btn-sm btn-success" onclick="Open_modal_add_address();"><i class="far fa-address-book"></i> เพิ่มข้อมูลลูกค้า</button>
+                                                <div class="btn-group" role="group" aria-label="Basic example">
+                                                    <button type="button" class="btn btn-sm btn-secondary" onclick="Open_modal_search_address();"><i class="fas fa-search"></i> ค้นหาลูกค้า</button>
+                                                    <button type="button" class="btn btn-sm btn-success" onclick="Open_modal_add_address();"><i class="far fa-address-book"></i> เพิ่มข้อมูลลูกค้า</button>
+                                                    <button type="button" class="btn btn-sm btn-warning" onclick="Open_modal_table_list_address();"><i class="fas fa-edit"></i> แก้ไขข้อมูลลูกค้า</button>
+                                                </div>
                                             </div>
                                             <div class="form-group col-md-2 text-right">
                                                 <b>{{ now() }}</b>
@@ -63,7 +64,7 @@
                                                 <b>Ref : </b>
                                             </div>
                                             <div class="form-group col-md-4">
-                                                <input type="text" class="form-control form-control-sm" id="ref_no">
+                                                <input type="text" class="form-control form-control-sm" id="ref_no" onchange="Save_ref_no()">
                                             </div>
                                         </div>
                                         <div class="form-row">
@@ -108,7 +109,10 @@
                                         </div>
                                         <div class="form-row">
                                             <div class="form-group col-md-2 text-right">
-                                                <button type="button" class="btn btn-sm btn-secondary btn-block" onclick="Open_modal_add_list_tax();"><i class="fas fa-list"></i> เพิ่ม List รายการ</button>
+                                                <div class="btn-group" role="group" aria-label="Basic example">
+                                                    <button type="button" class="btn btn-sm btn-secondary" onclick="Open_modal_add_list_tax();"><i class="fas fa-list"></i> เพิ่ม List</button>
+                                                    <button type="button" class="btn btn-sm btn-warning"><i class="fas fa-edit"></i></button>
+                                                </div>
                                             </div>
                                             <div class="form-group col-md-4">
                                                 <div class="input-group input-group-sm">
@@ -147,8 +151,11 @@
                                 <div class="card">
                                     <div class="card-body">
                                         <div class="row">
-                                            <div class="col-md-12 text-center">
-                                                <button type="button" class="btn btn-sm btn-block btn-success" onclick="Save_invoice_on();"><i class="fas fa-save"></i> บันทึกข้อมูล</button>
+                                            <div class="col-6 col-md-6">
+                                                <button type="button" class="btn btn-sm btn-block btn-dark"><i class='fas fa-print'></i> ปริ้นข้อมูล</button>
+                                            </div>
+                                            <div class="col-6 col-md-6">
+                                                <a class="btn btn-sm btn-block btn-primary" href="{{ url('') }}" role="button"><i class="fas fa-door-open"></i> หน้าหลัก</a>
                                             </div>
                                         </div>
                                     </div>
@@ -184,7 +191,7 @@
                                         <button type="button" class="btn btn-sm btn-block btn-danger" data-dismiss="modal"><i class="fas fa-times"></i> ยกเลิก</button>
                                     </div>
                                     <div class="col-md-6">
-                                        <button type="button" class="btn btn-sm btn-block btn-success" onclick="Save_search_address();"><i class="fas fa-save"></i> บันทึกข้อมูล</button>
+                                        <button type="button" class="btn btn-sm btn-block btn-success" onclick="Save_search_address();"><i class="fas fa-save"></i> เลือกข้อมูล</button>
                                     </div>
                                 </div>
                             </div>
@@ -272,6 +279,124 @@
                                     </div>
                                     <div class="col-md-6">
                                         <button type="button" class="btn btn-sm btn-block btn-success" onclick="Save_modal_search_address();"><i class="fas fa-save"></i> บันทึกข้อมูล</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal Edit address -->
+                <div class="modal fade" id="edit_address_modal" tabindex="-1" data-backdrop="static" role="dialog" aria-labelledby="edit_address_modalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-scrollable" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header bg-success p-2 pl-3">
+                                <h5 class="modal-title" id="edit_address_modalLabel"><i class="far fa-address-book"></i> แก้ไขข้อมูลลูกค้า</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <label for="company_name">ชื่อบริษัท / ชื่อลูกค้า</label>
+                                                    <input type="text" class="form-control form-control-sm" id="edit_company_name" placeholder="กรอก ชื่อบริษัท / ชื่อลูกค้า">                                           
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label for="type_address">ประเภท</label>
+                                                    <select class="custom-select custom-select-sm" id="edit_type_address">
+                                                        <option value="company" selected>บริษัท</option>
+                                                        <option value="customer">ลูกค้า</option>
+                                                    </select>                                                
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="company_address">ที่อยู่บริษัท / ที่อยู่ลูกค้า</label>
+                                            <textarea class="form-control" id="edit_company_address" placeholder="กรอก ที่อยู่บริษัท / ที่อยู่ลูกค้า" row="3"></textarea>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <label for="tax_id">เลขประจำตัวผู้เสียภาษี</label>
+                                                    <input type="text" class="form-control form-control-sm" id="edit_tax_id" placeholder="กรอก เลขประจำตัวผู้เสียภาษี">                                                  
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label for="phone">เบอร์มือถือ</label>
+                                                    <input type="text" class="form-control form-control-sm" id="edit_phone" placeholder="กรอก เบอร์มือถือ">                                                         
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <div class="col-md-12 text-center">
+                                                    <div class="custom-control custom-radio custom-control-inline">
+                                                        <input type="radio" id="edit_radio_company_1" name="edit_radio_company" class="custom-control-input" value="company" checked>
+                                                        <label class="custom-control-label" for="edit_radio_company_1">สำนักงานใหญ่</label>
+                                                    </div>
+                                                    <div class="custom-control custom-radio custom-control-inline">
+                                                        <input type="radio" id="edit_radio_company_2" name="edit_radio_company" class="custom-control-input" value="branch_company">
+                                                        <label class="custom-control-label" for="edit_radio_company_2">สาขา</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group branch_company">
+                                        <hr>
+                                            <div class="row">
+                                                <div class="col-md-2">
+                                                    <input type="text" class="form-control form-control-sm" id="edit_branch_company_on" value="0000">                                                
+                                                </div>
+                                                <div class="col-md-10">
+                                                    <input type="text" class="form-control form-control-sm" id="edit_branch_company_name" placeholder="สำนักงาน / เลขที่สาขา">                                                
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer" style="display:inline;">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <button type="button" class="btn btn-sm btn-block btn-danger" data-dismiss="modal"><i class="fas fa-times"></i> ปิด</button>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <button type="button" class="btn btn-sm btn-block btn-success" onclick="Save_modal_search_address();"><i class="fas fa-save"></i> บันทึกข้อมูล</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal -->
+                <div class="modal fade" id="table_list_address_modal" tabindex="-1" role="dialog" aria-labelledby="table_list_address_modalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header bg-warning p-2 pl-3">
+                                <h5 class="modal-title" id="table_list_address_modalLabel"><i class="fas fa-edit"></i> แก้ไขข้อมูลลูกค้า</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col-12 col-md-12">
+                                        <table class="table table-sm table-bordered" id="table_list_address">
+                                            <thead>
+                                                <tr>
+                                                    <th width="5%">No.</th>
+                                                    <th width="20%">Company Name</th>
+                                                    <th width="50%">Company Address</th>
+                                                    <th width="20%" class="text-center">Tool</th>
+                                                </tr>
+                                            <thead>
+                                            <tbody id="table_list_address_body"><tbody>
+                                        </table>
                                     </div>
                                 </div>
                             </div>

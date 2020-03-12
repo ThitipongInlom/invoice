@@ -38,7 +38,7 @@ class tax_invoice extends Controller
             // $prefix คือคำนำหน้าของแต่ล่ะโรงแรม 
             $prefix = hotel::where('hotel_name', $request->select_hotel)->value('hotel_tax_invoice');
 
-            $datemonth = date('ym');
+            $datemonth = date('ymd');
             $invoice = invoice::select('invoice_no')
                                 ->where( 'invoice_no', 'like', '%'.$datemonth.'%')
                                 ->where('hotel', $request->select_hotel)
@@ -51,7 +51,7 @@ class tax_invoice extends Controller
                     $New_Code = strval($no_text)+1;           
                 }
             }else { 
-                $New_Code = (strval($datemonth) * 10000)+1;
+                $New_Code = (strval($datemonth) * 1000)+1;
             }
 
             $invoice_no = $prefix.$New_Code;
@@ -120,8 +120,74 @@ class tax_invoice extends Controller
 
     public function Set_data_display(Request $request)
     {
-        $result = address::where('address_id', $request->search_select_address)->first();
+        $result = address::where('address_id', $request->search_select_address)->get();
+        foreach ($result as $key => $row) {
+            $invoice_id = invoice::where('invoice_no', $request->no_invoice)->value('invoice_id');
+            $invoice = invoice::find($invoice_id);
+            $invoice->address_no          = $row->address_id;
+            $invoice->invoice_compary     = $row->company_name;
+            $invoice->invoice_address     = $row->company_address;
+            $invoice->status_invoice      = 'confirm';
+            $invoice->save();
+
+            $auth_user = Auth::user()->username;
+            $log_data_old = "null";
+            $log_data_new = '{"address_no":"'.$row->address_id.'","invoice_compary":"'.$row->company_name.'","invoice_address":"'.$row->company_address.'","status_invoice":"confirm"}';
+            $action_log = new log;
+            $action_log->log_action = 'Update';
+            $action_log->log_action_detail = $request->no_invoice;
+            $action_log->log_data_old = $log_data_old;
+            $action_log->log_data_new = $log_data_new;
+            $action_log->log_username = $auth_user;
+            $action_log->save();
+        }
+
         return response()->json(['status' => 'success','error_text' => 'โหลดข้อมูล จังหวัด เสร็จสิ้น', 'results' => $result],200);
+    }
+
+    public function Save_ref_no(Request $request)
+    {
+        $invoice_id = invoice::where('invoice_no', $request->no_invoice)->value('invoice_id');
+        $invoice = invoice::find($invoice_id);
+        $invoice->ref_no    = $request->ref_no;
+        $invoice->save();
+
+        $auth_user = Auth::user()->username;
+        $log_data_old = "null";
+        $log_data_new = '{"ref_no":"'.$request->ref_no.'"}';
+        $action_log = new log;
+        $action_log->log_action = 'Update';
+        $action_log->log_action_detail = $request->no_invoice;
+        $action_log->log_data_old = $log_data_old;
+        $action_log->log_data_new = $log_data_new;
+        $action_log->log_username = $auth_user;
+        $action_log->save();
+
+        return response()->json(['status' => 'success','error_text' => 'อัพเดต ข้อมูลเสร็จสิ้น'],200);
+    }
+
+    public function Save_vat_invoice(Request $request)
+    {
+        $invoice_id = invoice::where('invoice_no', $request->no_invoice)->value('invoice_id');
+        $invoice = invoice::find($invoice_id);
+        $invoice->full_money     = $request->full_money;
+        $invoice->not_vat_money  = $request->not_vat_money;
+        $invoice->vat_money      = $request->vat_money;
+        $invoice->type_vat       = $request->type_vat;
+        $invoice->save();
+
+        $auth_user = Auth::user()->username;
+        $log_data_old = "null";
+        $log_data_new = '{"full_money":"'.$request->full_money.'","not_vat_money":"'.$request->not_vat_money.'","vat_money":"'.$request->vat_money.'","type_vat":"'.$request->type_vat.'"}';
+        $action_log = new log;
+        $action_log->log_action = 'Update';
+        $action_log->log_action_detail = $request->no_invoice;
+        $action_log->log_data_old = $log_data_old;
+        $action_log->log_data_new = $log_data_new;
+        $action_log->log_username = $auth_user;
+        $action_log->save();
+
+        return response()->json(['status' => 'success','error_text' => 'อัพเดต ข้อมูลเสร็จสิ้น'],200);
     }
 
     public function Get_tbody_data(Request $request)
@@ -178,89 +244,11 @@ class tax_invoice extends Controller
         return response()->json(['status' => 'success','error_text' => 'ลบข้อมูลเสร็จสิ้น'],200);
     }
 
-    public function Save_invoice_on(Request $request)
-    {
-        $invoice_id = invoice::where('invoice_no', $request->no_invoice)->value('invoice_id');
-        $invoice = invoice::find($invoice_id);
-        $invoice->address_no          = $request->address_no;
-        $invoice->ref_no              = $request->ref_no;
-        $invoice->invoice_compary     = $request->company;
-        $invoice->invoice_address     = $request->address;
-        $invoice->full_money          = $request->full_money;
-        $invoice->not_vat_money       = $request->not_vat_money;
-        $invoice->vat_money           = $request->vat_money;
-        $invoice->type_vat            = $request->type_vat;
-        $invoice->status_invoice      = 'confirm';
-        $invoice->save();
-
-        $auth_user = Auth::user()->username;
-        $log_data_old = "null";
-        $log_data_new = '{"address_no":"'.$request->address_no.'","ref_no":"'.$request->ref_no.'","invoice_compary":"'.$request->invoice_compary.'","invoice_address":"'.$request->invoice_address.'","full_money":"'.$request->full_money.'","not_vat_money":"'.$request->not_vat_money.'","vat_money":"'.$request->vat_money.'","type_vat":"'.$request->type_vat.'","status_invoice":"confirm"}';
-        $action_log = new log;
-        $action_log->log_action = 'Update';
-        $action_log->log_action_detail = $request->no_invoice;
-        $action_log->log_data_old = $log_data_old;
-        $action_log->log_data_new = $log_data_new;
-        $action_log->log_username = $auth_user;
-        $action_log->save();
-
-        return response()->json(['status' => 'success','error_text' => 'อัพเดตข้อมูลเสร็จสิ้น', 'path' => $request->root()],200);
-    }
-
-    public function Edit_invoice_on(Request $request)
-    {
-        $row_data = invoice::where('invoice_no', $request->no_invoice)->get();
-        $auth_user = Auth::user()->username;
-        foreach ($row_data as $key => $row) {
-            $address_log = $row->address_no != $request->address_no ? '"address_no": "'.$request->address_no.'",' : "";
-            $ref_no_log  = $row->ref_no != $request->ref_no ? '"ref_no": "'.$request->ref_no.'",' : "";
-            $invoice_compary_log = $row->invoice_compary != $request->company ? '"company": "'.$request->company.'",' : "";
-            $invoice_address_log = $row->invoice_address != $request->address ? '"address": "'.$request->address.'",' : "";
-            $full_money_log = $row->full_money != $request->full_money ? '"full_money": "'.$request->full_money.'",' : "";
-            $not_vat_money_log = $row->not_vat_money != $request->not_vat_money ? '"not_vat_money": "'.$request->not_vat_money.'","' : "";
-            $vat_money_log = $row->vat_money != $request->vat_money ? '"vat_money: "'.$request->vat_money.'",' : "";
-            $type_vat_log = $row->type_vat != $request->type_vat ? '"type_vat": "'.$request->type_vat.'",' : "";
-            $user_action = '"user_action": "'.$auth_user.'"';
-
-            $setting_log = $address_log.$ref_no_log.$invoice_compary_log.$invoice_address_log.$full_money_log.$not_vat_money_log.$vat_money_log.$type_vat_log.$user_action;
-        }
-
-        if ($setting_log == '') {
-            $set_log = 'null';
-        }else{
-            $set_log = "{".$setting_log."}";
-        }
-
-        $log_data_old = "null";
-        $log_data_new = $set_log;
-        $action_log = new log;
-        $action_log->log_action = 'Update';
-        $action_log->log_action_detail = $request->no_invoice;
-        $action_log->log_data_old = $log_data_old;
-        $action_log->log_data_new = $log_data_new;
-        $action_log->log_username = $auth_user;
-        $action_log->save();
-
-        $invoice_id = invoice::where('invoice_no', $request->no_invoice)->value('invoice_id');
-        $invoice = invoice::find($invoice_id);
-        $invoice->address_no          = $request->address_no;
-        $invoice->ref_no              = $request->ref_no;
-        $invoice->invoice_compary     = $request->company;
-        $invoice->invoice_address     = $request->address;
-        $invoice->full_money          = $request->full_money;
-        $invoice->not_vat_money       = $request->not_vat_money;
-        $invoice->vat_money           = $request->vat_money;
-        $invoice->type_vat            = $request->type_vat;
-        $invoice->save();
-
-        return response()->json(['status' => 'success','error_text' => 'อัพเดตข้อมูลเสร็จสิ้น', 'path' => $request->root()],200);
-    }
-
     public function Save_search_address(Request $request)
     {
         $check_name = address::where('company_name', $request->company_name)->count();
         if ($check_name == '1') {
-            
+
             return response()->json(['status' => 'error','error_text' => 'มี บริษัทนี้อยู่แล้ว'],200);
         }else {
             $address = new address;
@@ -331,6 +319,13 @@ class tax_invoice extends Controller
         $log_data = log::where('log_action_detail', $request->no_invoice)->get();
 
         return response()->json(['status' => 'success','error_text' => 'โหลดข้อมูลสำเร็จ', 'result' => $log_data],200);
+    }
+
+    public function Get_list_address(Request $request)
+    {
+        $address_data = address::get();
+
+        return response()->json(['status' => 'success','error_text' => 'โหลดข้อมูลสำเร็จ', 'result' => $address_data],200);
     }
     
 }

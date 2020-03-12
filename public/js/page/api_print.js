@@ -88,5 +88,9 @@ axios({
 });
 
 var formatNumber = function formatNumber(num) {
-    return parseFloat(num).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')
+    if (num == null) {
+        return '0.00';
+    } else {
+        return parseFloat(num).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')
+    }
 }

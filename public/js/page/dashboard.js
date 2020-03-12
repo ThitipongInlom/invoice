@@ -265,7 +265,11 @@ var Save_cancel_invoice = function Save_cancel_invoice() {
 }
 
 var formatNumber = function formatNumber(num) {
-    return parseFloat(num).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')
+    if (num == null) {
+        return '0.00';
+    }else {
+        return parseFloat(num).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')
+    }
 }
 
 var Set_axios_data = function Set_axios_data(array) {
