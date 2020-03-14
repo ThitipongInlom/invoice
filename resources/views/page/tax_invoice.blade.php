@@ -44,9 +44,7 @@
                                             </div>
                                             <div class="form-group col-md-6">
                                                 <div class="btn-group" role="group" aria-label="Basic example">
-                                                    <button type="button" class="btn btn-sm btn-secondary" onclick="Open_modal_search_address();"><i class="fas fa-search"></i> ค้นหาลูกค้า</button>
-                                                    <button type="button" class="btn btn-sm btn-success" onclick="Open_modal_add_address();"><i class="far fa-address-book"></i> เพิ่มข้อมูลลูกค้า</button>
-                                                    <button type="button" class="btn btn-sm btn-warning" onclick="Open_modal_table_list_address();"><i class="fas fa-edit"></i> แก้ไขข้อมูลลูกค้า</button>
+                                                    <button type="button" class="btn btn-sm btn-secondary" onclick="Open_modal_table_list_address();"><i class="fas fa-address-book"></i> | ข้อมูลลูกค้า</button>
                                                 </div>
                                             </div>
                                             <div class="form-group col-md-2 text-right">
@@ -109,10 +107,7 @@
                                         </div>
                                         <div class="form-row">
                                             <div class="form-group col-md-2 text-right">
-                                                <div class="btn-group" role="group" aria-label="Basic example">
-                                                    <button type="button" class="btn btn-sm btn-secondary" onclick="Open_modal_add_list_tax();"><i class="fas fa-list"></i> เพิ่ม List</button>
-                                                    <button type="button" class="btn btn-sm btn-warning" onclick="Open_modal_table_list_tax();"><i class="fas fa-edit"></i></button>
-                                                </div>
+                                                <button type="button" class="btn btn-sm btn-block btn-secondary" onclick="Open_modal_table_list_tax();"><i class="fas fa-list"></i> | รายการ</button>
                                             </div>
                                             <div class="form-group col-md-4">
                                                 <div class="input-group input-group-sm">
@@ -163,40 +158,6 @@
                             </div>
                         </div>
                     </section>
-                </div>
-
-                <!-- Modal Search address -->
-                <div class="modal fade" id="search_address_modal" tabindex="-1" data-backdrop="static" role="dialog" aria-labelledby="search_address_modalLabel" aria-hidden="true">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header bg-secondary p-2 pl-3">
-                                <h5 class="modal-title" id="search_address_modalLabel"><i class="fas fa-search"></i> ค้นหาลูกค้า</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div class="modal-body">
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="form-group">
-                                            <label for="search_select_address">เลือก บริษัท / ลูกค้า</label>
-                                            <select class="form-control form-control-sm" id="search_select_address"></select>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="modal-footer" style="display:inline;">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <button type="button" class="btn btn-sm btn-block btn-danger" data-dismiss="modal"><i class="fas fa-times"></i> ยกเลิก</button>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <button type="button" class="btn btn-sm btn-block btn-success" onclick="Save_search_address();"><i class="fas fa-save"></i> เลือกข้อมูล</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
 
                 <!-- Modal Add address -->
@@ -377,13 +338,21 @@
                 <div class="modal fade" id="table_list_address_modal" tabindex="-1" role="dialog" aria-labelledby="table_list_address_modalLabel" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
                         <div class="modal-content">
-                            <div class="modal-header bg-warning p-2 pl-3">
-                                <h5 class="modal-title" id="table_list_address_modalLabel"><i class="fas fa-edit"></i> แก้ไขข้อมูลลูกค้า</h5>
+                            <div class="modal-header bg-secondary p-2 pl-3">
+                                <h5 class="modal-title" id="table_list_address_modalLabel"><i class="fas fa-address-book"></i> ข้อมูลลูกค้า</h5>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
                             <div class="modal-body">
+                                <div class="row mb-2">
+                                    <div class="col-8 col-md-8">
+                                        <input type="text" class="form-control form-control-sm" id="table_address_search" onkeyup="Open_modal_table_list_address();"  placeholder="ค้นหา ลูกค้า">
+                                    </div>
+                                    <div class="col-4 col-md-4">
+                                        <button type="button" class="btn btn-sm btn-block btn-success" onclick="Open_modal_add_address();"><i class="far fa-address-book"></i> เพิ่มข้อมูลลูกค้า</button>
+                                    </div>
+                                </div>
                                 <div class="row">
                                     <div class="col-12 col-md-12">
                                         <table class="table table-sm table-bordered" id="table_list_address">
@@ -391,8 +360,8 @@
                                                 <tr>
                                                     <th width="5%">No.</th>
                                                     <th width="20%">Company Name</th>
-                                                    <th width="50%">Company Address</th>
-                                                    <th width="20%" class="text-center">Tool</th>
+                                                    <th width="40%">Company Address</th>
+                                                    <th width="30%" class="text-center">Tool</th>
                                                 </tr>
                                             <thead>
                                             <tbody id="table_list_address_body"><tbody>
@@ -446,6 +415,14 @@
                                 </button>
                             </div>
                             <div class="modal-body">
+                                <div class="row mb-2">
+                                    <div class="col-8 col-md-8">
+                                        <input type="text" class="form-control form-control-sm" id="table_list_tax_search" onkeyup="Open_modal_table_list_tax();" placeholder="ค้นหา รายการ">
+                                    </div>
+                                    <div class="col-4 col-md-4">
+                                        <button type="button" class="btn btn-sm btn-block btn-success" onclick="Open_modal_add_list_tax();"><i class="fas fa-list"></i> เพิ่ม List</button>
+                                    </div>
+                                </div>
                                 <div class="row">
                                     <div class="col-12 col-md-12">
                                         <table class="table table-sm table-bordered" id="table_list_tax">
@@ -489,6 +466,37 @@
                                     </div>
                                     <div class="col-md-6">
                                         <button type="button" class="btn btn-sm btn-block btn-success" id="btn_modal_edit_list_tax" onclick="Save_modal_edit_list_tax(this);"><i class="fas fa-save"></i> บันทึกข้อมูล</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal Del address -->
+                <div class="modal fade" id="del_address_modal" tabindex="-1" data-backdrop="static" role="dialog" aria-labelledby="del_address_modalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header bg-danger p-2 pl-3">
+                                <h5 class="modal-title" id="del_address_modalLabel"><i class="fas fa-list"></i> ลบ ข้อมูลลูกค้า</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <input type="text" class="form-control form-control-sm" id="del_address_note" placeholder="หมายเหตุ">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer" style="display:inline;">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <button type="button" class="btn btn-sm btn-block btn-danger" data-dismiss="modal"><i class="fas fa-times"></i> ยกเลิก</button>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <button type="button" class="btn btn-sm btn-block btn-success" id="btn_modal_del_address" onclick="Save_modal_del_address(this);"><i class="fas fa-save"></i> บันทึกข้อมูล</button>
                                     </div>
                                 </div>
                             </div>

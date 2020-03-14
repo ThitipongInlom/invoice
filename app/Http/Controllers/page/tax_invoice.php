@@ -17,7 +17,8 @@ class tax_invoice extends Controller
 {
     public function tax_invoice_page(Request $request)
     {
-        return view('page\tax_invoice');
+        $url_root = $request->root();
+        return view('page\tax_invoice', ['url_root' => $url_root]);
     }
 
     public function tax_invoice_edit_page(Request $request, $invoice_no)
@@ -78,25 +79,6 @@ class tax_invoice extends Controller
         }else {
             return response()->json(['status' => 'error','error_text' => 'สิทธิ์ การใช้งานไม่สามารถ สร้างได้'],200);
         }
-    }
-
-    public function Get_address(Request $request)
-    {
-        $return_arr = array();
-        $row_array = array();
-        $text = $request->get('text');
-
-        $districts = address::where('company_name', 'like', "%$text%")
-                                ->groupBy('company_name')
-                                ->orderBy('company_name', 'asc')
-                                ->get();
-        foreach ($districts as $row) {
-            $row_array['id'] = $row->address_id;
-            $row_array['text'] = "$row->company_name $row->company_address $row->phone";
-            array_push($return_arr,$row_array);
-        }
-
-        return response()->json(['status' => 'success','error_text' => 'โหลดข้อมูล จังหวัด เสร็จสิ้น', 'results' => $return_arr],200);
     }
 
     public function Get_list_tax(Request $request)
@@ -168,26 +150,35 @@ class tax_invoice extends Controller
 
     public function Save_vat_invoice(Request $request)
     {
-        $invoice_id = invoice::where('invoice_no', $request->no_invoice)->value('invoice_id');
-        $invoice = invoice::find($invoice_id);
-        $invoice->full_money     = $request->full_money;
-        $invoice->not_vat_money  = $request->not_vat_money;
-        $invoice->vat_money      = $request->vat_money;
-        $invoice->type_vat       = $request->type_vat;
-        $invoice->save();
+        if (isset($request->full_money)) {
+            $invoice_data = invoice::where('invoice_no', $request->no_invoice)->get();
+            foreach ($invoice_data as $key => $row) {
+                if ($row->full_money != $request->full_money OR
+                    $row->not_vat_money != $request->not_vat_money OR
+                    $row->vat_money != $request->vat_money OR
+                    $row->type_vat != $request->type_vat) {
+                    $invoice_id = invoice::where('invoice_no', $request->no_invoice)->value('invoice_id');
+                    $invoice = invoice::find($invoice_id);
+                    $invoice->full_money     = $request->full_money;
+                    $invoice->not_vat_money  = $request->not_vat_money;
+                    $invoice->vat_money      = $request->vat_money;
+                    $invoice->type_vat       = $request->type_vat;
+                    $invoice->save();
 
-        $auth_user = Auth::user()->username;
-        $log_data_old = "null";
-        $log_data_new = '{"full_money":"'.$request->full_money.'","not_vat_money":"'.$request->not_vat_money.'","vat_money":"'.$request->vat_money.'","type_vat":"'.$request->type_vat.'"}';
-        $action_log = new log;
-        $action_log->log_action = 'Update';
-        $action_log->log_action_detail = $request->no_invoice;
-        $action_log->log_data_old = $log_data_old;
-        $action_log->log_data_new = $log_data_new;
-        $action_log->log_username = $auth_user;
-        $action_log->save();
-
-        return response()->json(['status' => 'success','error_text' => 'อัพเดต ข้อมูลเสร็จสิ้น'],200);
+                    $auth_user = Auth::user()->username;
+                    $log_data_old = "null";
+                    $log_data_new = '{"full_money":"'.$request->full_money.'","not_vat_money":"'.$request->not_vat_money.'","vat_money":"'.$request->vat_money.'","type_vat":"'.$request->type_vat.'"}';
+                    $action_log = new log;
+                    $action_log->log_action = 'Update';
+                    $action_log->log_action_detail = $request->no_invoice;
+                    $action_log->log_data_old = $log_data_old;
+                    $action_log->log_data_new = $log_data_new;
+                    $action_log->log_username = $auth_user;
+                    $action_log->save();
+                }
+            }
+            return response()->json(['status' => 'success','error_text' => 'อัพเดต ข้อมูลเสร็จสิ้น'],200);
+        }
     }
 
     public function Get_tbody_data(Request $request)
@@ -344,14 +335,20 @@ class tax_invoice extends Controller
 
     public function Get_log_invoice(Request $request)
     {
-        $log_data = log::where('log_action_detail', $request->no_invoice)->get();
+        $log_data = log::where('log_action_detail', $request->no_invoice)->orderBy('log_id', 'desc')->get();
 
         return response()->json(['status' => 'success','error_text' => 'โหลดข้อมูลสำเร็จ', 'result' => $log_data],200);
     }
 
     public function Get_list_address(Request $request)
     {
-        $address_data = address::get();
+        if ($request->table_address_search == "") {
+            $address_data = address::limit(10)->get();
+        } else {
+            $address_data = address::where('company_name', 'like', "%$request->table_address_search%")
+                                    ->orWhere('company_address', 'like', "%$request->table_address_search%")
+                                    ->limit(10)->get();
+        }
 
         return response()->json(['status' => 'success','error_text' => 'โหลดข้อมูลสำเร็จ', 'result' => $address_data],200);
     }
@@ -394,7 +391,11 @@ class tax_invoice extends Controller
 
     public function Get_list_tax_table(Request $request)
     {
-        $listtax_data = listtax::get();
+        if ($request->table_list_tax_search == "") {
+            $listtax_data = listtax::limit(10)->get();
+        }else {
+            $listtax_data = listtax::where('list_value', 'like', "%$request->table_list_tax_search%")->limit(10)->get();
+        }
 
         return response()->json(['status' => 'success','error_text' => 'โหลดข้อมูล สำเร็จ', 'result' => $listtax_data],200);
     }

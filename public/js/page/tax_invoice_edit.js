@@ -58,71 +58,56 @@ var Open_modal_search_address = function Open_modal_search_address() {
     });
 }
 
-var Save_search_address = function Save_search_address() {
+var Save_search_address = function Save_search_address(e) {
     var Toastr = Set_Toastr();
-    var value = $("#search_select_address").val();
+    var value = $(e).attr('address_id');
     if (value != null) {
-        var data = {
-            search_select_address: $("#search_select_address").val(),
-            no_invoice: $("#no_invoice").val(),
-        };
-        axios({
-                method: 'post',
-                url: '../api/v1/Set_data_display',
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                data: data
-            })
-            .then(function (response) {
-                console.log(response);
-                $(response.data.results).each(function (index, value) {
-                    $("#company").val(value.company_name);
-                    $("#address").val(value.company_address);
-                    $("#company_type").val(value.type_address);
-                    $("#phone_show").val(value.phone);
-                    $("#address_no").val(value.address_id);
-                });
-                $("#search_address_modal").modal('hide');
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
+        if ($("#no_invoice").val() == '') {
+            setTimeout(function () {
+                this.Save_search_address_update(e);
+            }, 500);
+        } else {
+            this.Save_search_address_update(e);
+            Toastr["success"]("อัพเดต บริษัท / ลูกค้า เสร็จสิ้น");
+        }
     } else {
         Toastr["error"]("กรุณาเลือก บริษัท / ลูกค้า");
     }
 }
 
-var Save_ref_no = function Save_ref_no() {
-    var Toastr = Set_Toastr();
-    // เช็คว่ามี tax_invoice หรือป่าว
-    if ($("#no_invoice").val() != '') {
-        var data = {
-            ref_no: $("#ref_no").val(),
-            no_invoice: $("#no_invoice").val(),
-        };
-        axios({
-                method: 'post',
-                url: '../api/v1/Save_ref_no',
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                data: data
-            })
-            .then(function (response) {
-                console.log(response);
-                Toastr[response.data.status](response.data.error_text);
-            })
-            .catch(function (error) {
-                console.log(error);
+var Save_search_address_update = function Save_search_address_update(e) {
+    var data = {
+        search_select_address: $(e).attr('address_id'),
+        no_invoice: $("#no_invoice").val(),
+    };
+    axios({
+            method: 'post',
+            url: '../api/v1/Set_data_display',
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            data: data
+        })
+        .then(function (response) {
+            console.log(response);
+            $(response.data.results).each(function (index, value) {
+                $("#company").val(value.company_name);
+                $("#address").val(value.company_address);
+                $("#company_type").val(value.type_address);
+                $("#phone_show").val(value.phone);
+                $("#address_no").val(value.address_id);
             });
-    } else {
-        Toastr["error"]("กรุณาสร้าง Tax No");
-        $("#ref_no").val('');
-    }
+            $("#table_list_address_modal").modal('hide');
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+
+    return;
 }
 
 var Open_modal_add_address = function Open_modal_add_address() {
+    $("#table_list_address_modal").modal('hide');
     $("#add_address_modal").modal('show');
     $('input:radio[name="radio_company"]').change(
         function () {
@@ -143,12 +128,104 @@ var Open_modal_add_address = function Open_modal_add_address() {
     });
 }
 
-var Open_modal_edit_address = function Open_modal_edit_address() {
-    $("#edit_address_modal").modal('show');
+var Open_modal_edit_address = function Open_modal_edit_address(e) {
+    var Toastr = Set_Toastr();
+    $("#table_list_address_modal").modal('hide');
+    $('input:radio[name="edit_radio_company"]').change(
+        function () {
+            if ($(this).val() == 'branch_company') {
+                $(".branch_company_edit").show();
+            } else {
+                $(".branch_company_edit").hide();
+            }
+        });
+    var data = {
+        address_id: $(e).attr('address_id'),
+    };
+    axios({
+        method: 'post',
+        url: '../api/v1/Get_edit_address',
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        data: data
+    })
+    .then(function (response) {
+        console.log(response);
+        Toastr[response.data.status](response.data.error_text);
+        if (response.data.status == 'success') {
+            $.each(response.data.result, function (key, value) {
+                $("#btn_modal_search_address_edit").attr('address_id', value.address_id);
+                $("#edit_company_name").val(value.company_name);
+                $("#edit_type_address").val(value.type_address);
+                $("#edit_company_address").val(value.company_address);
+                $("#edit_tax_id").val(value.tax_id);
+                $("#edit_phone").val(value.phone);
+                $('input:radio[name="edit_radio_company"]').filter('[value="' + value.company_type + '"]').attr('checked', true);
+                if (value.company_type == 'branch_company') {
+                    $(".branch_company_edit").show();
+                } else {
+                    $(".branch_company_edit").hide();
+                }
+                $("#edit_branch_company_on").val(value.branch_company_on);
+                $("#edit_branch_company_name").val(value.branch_company_name);
+            });
+            $("#edit_address_modal").modal('show');
+        }
+    })
+    .catch(function (error) {
+        console.log(error);
+    });
+
+    $('#edit_address_modal').on('hidden.bs.modal', function (e) {
+        $("#edit_company_name").val('').removeClass('is-valid').removeClass('is-invalid');
+        $("#edit_type_address").val('').removeClass('is-valid').removeClass('is-invalid');
+        $("#edit_company_address").val('').removeClass('is-valid').removeClass('is-invalid');
+        $("#edit_tax_id").val('').removeClass('is-valid').removeClass('is-invalid');
+        $("#edit_phone").val('').removeClass('is-valid').removeClass('is-invalid');
+        $(".branch_company_edit").hide();
+        $("[name=edit_radio_company]").attr('checked', false);
+    });
 }
 
 var Open_modal_table_list_address = function Open_modal_table_list_address() {
-    $("#table_list_address_modal").modal('show');
+    var data = {
+        table_address_search: $("#table_address_search").val()
+    }
+    axios({
+        method: 'post',
+        url: '../api/v1/Get_list_address',
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        data: data,
+    })
+    .then(function (response) {
+        console.log(response);
+        $("#table_list_address_body").html('');
+        var i = 1;
+        $.each(response.data.result, function (key, value) {
+            var btn_gen = '<button class="btn btn-sm btn-success" address_id="' + value.address_id + '" id="search_select_address" onclick="Save_search_address(this);"><i class="fas fa-hand-pointer"></i> ใช้งาน</button> ';
+            var btn_edit = '<button class="btn btn-sm btn-warning" address_id="' + value.address_id + '" onclick="Open_modal_edit_address(this);"><i class="fas fa-edit"></i> แก้ไข</button>';
+            var btn_del = '<button class="btn btn-sm btn-danger" address_id="' + value.address_id + '"  onclick="Save_modal_del_address(this);"><i class="fas fa-trash"></i> ลบ</button>';
+            var table = "<tr>" +
+                "<td class='text-center'>" + i + "</td>" +
+                "<td>" + value.company_name + "</td>" +
+                "<td>" + value.company_address + "</td>" +
+                "<td class='text-center'>" + btn_gen + " " + btn_edit + " " + btn_del + "</td>" +
+                "</tr>";
+
+            $("#table_list_address_body").append(table);
+            i++;
+        });
+    })
+    .catch(function (error) {
+        console.log(error);
+    });
+    // เช็คว่ามีการเปิด Modal หรอไม่ ถ้าไม่มี ให้ทำการเปิด Modal
+    if ($('#table_list_address_modal').hasClass('in') == false) {
+        $("#table_list_address_modal").modal('show');
+    }
 }
 
 var Save_modal_search_address = function Save_modal_search_address() {
@@ -258,25 +335,30 @@ var Open_modal_edit_address = function Open_modal_edit_address(e) {
 }
 
 var Open_modal_table_list_address = function Open_modal_table_list_address() {
+    var data = {
+        table_address_search: $("#table_address_search").val()
+    }
     axios({
         method: 'post',
         url: '../api/v1/Get_list_address',
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        }
+        },
+        data: data,
     })
     .then(function (response) {
         console.log(response);
         $("#table_list_address_body").html('');
         var i = 1;
         $.each(response.data.result, function (key, value) {
+            var btn_gen = '<button class="btn btn-sm btn-success" address_id="' + value.address_id + '" id="search_select_address" onclick="Save_search_address(this);"><i class="fas fa-hand-pointer"></i> ใช้งาน</button> ';
             var btn_edit = '<button class="btn btn-sm btn-warning" address_id="' + value.address_id + '" onclick="Open_modal_edit_address(this);"><i class="fas fa-edit"></i> แก้ไข</button>';
             var btn_del = '<button class="btn btn-sm btn-danger" address_id="' + value.address_id + '"  onclick="Save_modal_del_address(this);"><i class="fas fa-trash"></i> ลบ</button>';
             var table = "<tr>" +
                 "<td class='text-center'>" + i + "</td>" +
                 "<td>" + value.company_name + "</td>" +
                 "<td>" + value.company_address + "</td>" +
-                "<td class='text-center'>" + btn_edit + " " + btn_del + "</td>" +
+                "<td class='text-center'>" + btn_gen + " " + btn_edit + " " + btn_del + "</td>" +
                 "</tr>";
 
             $("#table_list_address_body").append(table);
@@ -286,7 +368,10 @@ var Open_modal_table_list_address = function Open_modal_table_list_address() {
     .catch(function (error) {
         console.log(error);
     });
-    $("#table_list_address_modal").modal('show');
+    // เช็คว่ามีการเปิด Modal หรอไม่ ถ้าไม่มี ให้ทำการเปิด Modal
+    if ($('#table_list_address_modal').hasClass('in') == false) {
+        $("#table_list_address_modal").modal('show');
+    }
 }
 
 var Save_modal_search_address_edit = function Save_modal_search_address_edit(e) {
@@ -382,12 +467,16 @@ var Save_modal_del_address = function Save_modal_del_address(e) {
 }
 
 var Open_modal_table_list_tax = function Open_modal_table_list_tax() {
+    var data = {
+        table_list_tax_search: $("#table_list_tax_search").val()
+    }
     axios({
         method: 'post',
         url: '../api/v1/Get_list_tax_table',
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        }
+        },
+        data: data,
     })
     .then(function (response) {
         console.log(response);
@@ -409,7 +498,10 @@ var Open_modal_table_list_tax = function Open_modal_table_list_tax() {
     .catch(function (error) {
         console.log(error);
     });
-    $("#table_list_tax_modal").modal('show');
+    // เช็คว่ามีการเปิด Modal หรอไม่ ถ้าไม่มี ให้ทำการเปิด Modal
+    if ($('#table_list_tax_modal').hasClass('in') == false) {
+        $("#table_list_tax_modal").modal('show');
+    }
 }
 
 var Open_modal_edit_list_tax = function Open_modal_edit_list_tax(e) {
@@ -473,6 +565,7 @@ var Save_modal_edit_list_tax = function Save_modal_edit_list_tax(e) {
 }
 
 var Open_modal_add_list_tax = function Open_modal_add_list_tax() {
+    $("#table_list_tax_modal").modal('hide');
     $("#add_list_tax_modal").modal('show');
     $('#add_list_tax_modal').on('hidden.bs.modal', function (e) {
         $("#list_tax").val('').removeClass('is-valid').removeClass('is-invalid');

@@ -153,7 +153,7 @@ var Open_view_invoice = function Open_view_invoice(e) {
 var Open_edit_invoice = function Open_edit_invoice(e) {
     $("#save_invoice_btn_edit").attr('invoice_no', $(e).attr('invoice_no'));
     // ถ้า เป็นสิทธิ์ Admin และมี สิทธิ์ในการ Cancel ไม่ต้อง กรอก Username Password
-    if ($("#user_type").val() == 'admin' && $("#user_action").val() >= '3') {
+    if ($("#user_type").val() == 'admin' || $("#user_action").val() >= '2') {
         $("#edit_invoice_username").val($("#user_username").val());
         $("#edit_invoice_password").val($("#user_username").val());
         this.Save_edit_invoice();
@@ -213,7 +213,7 @@ var Save_edit_invoice = function Save_edit_invoice(e) {
 var Open_cancel_invoice = function Open_cancel_invoice(e) {
     $("#save_invoice_btn_cancel").attr('invoice_no', $(e).attr('invoice_no'));
     // ถ้า เป็นสิทธิ์ Admin และมี สิทธิ์ในการ Cancel ไม่ต้อง กรอก Username Password
-    if ($("#user_type").val() == 'admin' && $("#user_action").val() >= '3') {
+    if ($("#user_type").val() == 'admin' || $("#user_action").val() >= '3') {
         $("#cancel_invoice_username").val($("#user_username").val());
         $("#cancel_invoice_password").val($("#user_username").val());
         this.Save_cancel_invoice();

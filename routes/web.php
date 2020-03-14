@@ -18,7 +18,6 @@ Route::group(['prefix' => 'api/v1'], function () {
     Route::post('/Do_login', 'auth\login@Do_login');
     Route::post('/Do_register', 'auth\register@Do_register');
     Route::get('/Do_logout', 'auth\login@Do_logout');
-    Route::get('/Get_address', 'page\tax_invoice@Get_address');
     Route::get('/Get_list_tax', 'page\tax_invoice@Get_list_tax');
     Route::post('/Get_tbody_data', 'page\tax_invoice@Get_tbody_data');
     Route::post('/Set_data_display', 'page\tax_invoice@Set_data_display');

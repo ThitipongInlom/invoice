@@ -31,44 +31,17 @@ $("#type_address").select2({
     theme: 'bootstrap4'
 });
 
-var Open_modal_search_address = function Open_modal_search_address() {
-    $("#search_address_modal").modal('show');
-    $("#search_select_address").select2({
-        theme: 'bootstrap4',
-        placeholder: "เลือก บริษัท / ลูกค้า",
-        ajax: {
-            url: 'api/v1/Get_address',
-            dataType: 'json',
-            data: function (params) {
-                var query = {
-                    text: params.term,
-                }
-                return query;
-            }
-        },
-        cache: true,
-        formatResult: format,
-        formatSelection: format,
-        escapeMarkup: function (m) {
-            return m;
-        }
-    });
-    $('#search_address_modal').on('hidden.bs.modal', function (e) {
-        $("#search_select_address").val('').removeClass('is-valid').removeClass('is-invalid');
-    });
-}
-
-var Save_search_address = function Save_search_address() {
+var Save_search_address = function Save_search_address(e) {
     var Toastr = Set_Toastr();
-    var value = $("#search_select_address").val();
+    var value = $(e).attr('address_id');
     if (value != null) {
         if ($("#no_invoice").val() == '') {
             this.Create_tax_no();
             setTimeout(function () {
-                this.Save_search_address_update();
+                this.Save_search_address_update(e);
             }, 500);
         }else{
-            this.Save_search_address_update();
+            this.Save_search_address_update(e);
             Toastr["success"]("อัพเดต บริษัท / ลูกค้า เสร็จสิ้น");
         }
     }else {
@@ -105,9 +78,9 @@ var Save_ref_no = function Save_ref_no() {
     }
 }
 
-var Save_search_address_update = function Save_search_address_update() {
+var Save_search_address_update = function Save_search_address_update(e) {
     var data = {
-        search_select_address: $("#search_select_address").val(),
+        search_select_address: $(e).attr('address_id'),
         no_invoice: $("#no_invoice").val(),
     };
     axios({
@@ -127,7 +100,7 @@ var Save_search_address_update = function Save_search_address_update() {
             $("#phone_show").val(value.phone);
             $("#address_no").val(value.address_id);
         });
-        $("#search_address_modal").modal('hide');
+        $("#table_list_address_modal").modal('hide');
     })
     .catch(function (error) {
         console.log(error);
@@ -166,6 +139,7 @@ var Create_tax_no = function Create_tax_no() {
 }
 
 var Open_modal_add_address = function Open_modal_add_address() {
+    $("#table_list_address_modal").modal('hide');
     $("#add_address_modal").modal('show');
     $('input:radio[name="radio_company"]').change(
         function () {
@@ -247,25 +221,30 @@ var Open_modal_edit_address = function Open_modal_edit_address(e) {
 }
 
 var Open_modal_table_list_address = function Open_modal_table_list_address() {
+    var data = {
+        table_address_search: $("#table_address_search").val()
+    }
     axios({
         method: 'post',
         url: 'api/v1/Get_list_address',
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        }
+        },
+        data: data,
     })
     .then(function (response) {
         console.log(response);
         $("#table_list_address_body").html('');
         var i = 1;
         $.each(response.data.result, function (key, value) {
+            var btn_gen = '<button class="btn btn-sm btn-success" address_id="' + value.address_id + '" id="search_select_address" onclick="Save_search_address(this);"><i class="fas fa-hand-pointer"></i> ใช้งาน</button> ';
             var btn_edit = '<button class="btn btn-sm btn-warning" address_id="' + value.address_id + '" onclick="Open_modal_edit_address(this);"><i class="fas fa-edit"></i> แก้ไข</button>';
-            var btn_del = '<button class="btn btn-sm btn-danger" address_id="' + value.address_id + '"  onclick="Save_modal_del_address(this);"><i class="fas fa-trash"></i> ลบ</button>';
+            var btn_del = '<button class="btn btn-sm btn-danger" address_id="' + value.address_id + '"  onclick="del_address_modal(this);"><i class="fas fa-trash"></i> ลบ</button>';
             var table = "<tr>" +
                         "<td class='text-center'>"+ i +"</td>" +
                         "<td>" + value.company_name + "</td>" +
                         "<td>" + value.company_address + "</td>" +
-                        "<td class='text-center'>" + btn_edit + " " + btn_del + "</td>" +
+                        "<td class='text-center'>" + btn_gen + " " + btn_edit + " " + btn_del + "</td>" +
                         "</tr>";
 
             $("#table_list_address_body").append(table);
@@ -275,7 +254,10 @@ var Open_modal_table_list_address = function Open_modal_table_list_address() {
     .catch(function (error) {
         console.log(error);
     });
-    $("#table_list_address_modal").modal('show');
+    // เช็คว่ามีการเปิด Modal หรอไม่ ถ้าไม่มี ให้ทำการเปิด Modal
+    if ($('#table_list_address_modal').hasClass('in') == false) {
+        $("#table_list_address_modal").modal('show');
+    }
 }
 
 var Save_modal_search_address = function Save_modal_search_address() {
@@ -392,37 +374,48 @@ var Save_modal_del_list_tax = function Save_modal_del_list_tax(e) {
 }
 
 var Save_modal_del_address = function Save_modal_del_address(e) {
+    var Array_id = ['del_address_note'];
+    var Check_rows = Check_null_input(Array_id);
     var Toastr = Set_Toastr();
-    var data = {
-        address_id: $(e).attr('address_id'),
-    };
-    axios({
-        method: 'post',
-        url: 'api/v1/Save_modal_del_address',
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        },
-        data: data
-    })
-    .then(function (response) {
-        console.log(response);
-        Toastr[response.data.status](response.data.error_text);
-        if (response.data.status == 'success') {
-            $("#table_list_address_modal").modal('hide');
-        }
-    })
-    .catch(function (error) {
-        console.log(error);
-    });
+    if (Check_rows == true) {
+        var data = {
+            address_id: $(e).attr('address_id'),
+            del_address_note: $("#del_address_note").val(),
+        };
+        axios({
+            method: 'post',
+            url: 'api/v1/Save_modal_del_address',
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            data: data
+        })
+        .then(function (response) {
+            console.log(response);
+            Toastr[response.data.status](response.data.error_text);
+            if (response.data.status == 'success') {
+                $("#table_list_address_modal").modal('hide');
+            }
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+    }else {
+        Toastr["error"]("กรุณา ใส่หมายเหตุของการลบ");
+    }
 }
 
 var Open_modal_table_list_tax = function Open_modal_table_list_tax() {
+    var data = {
+        table_list_tax_search: $("#table_list_tax_search").val()
+    }
     axios({
         method: 'post',
         url: 'api/v1/Get_list_tax_table',
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        }
+        },
+        data: data,
     })
     .then(function (response) {
         console.log(response);
@@ -444,7 +437,10 @@ var Open_modal_table_list_tax = function Open_modal_table_list_tax() {
     .catch(function (error) {
         console.log(error);
     });
-    $("#table_list_tax_modal").modal('show');
+    // เช็คว่ามีการเปิด Modal หรอไม่ ถ้าไม่มี ให้ทำการเปิด Modal
+    if ($('#table_list_tax_modal').hasClass('in') == false) {
+        $("#table_list_tax_modal").modal('show');
+    }
 }
 
 var Open_modal_edit_list_tax = function Open_modal_edit_list_tax(e) {
@@ -508,6 +504,7 @@ var Save_modal_edit_list_tax = function Save_modal_edit_list_tax(e) {
 }
 
 var Open_modal_add_list_tax = function Open_modal_add_list_tax() {
+    $("#table_list_tax_modal").modal('hide');
     $("#add_list_tax_modal").modal('show');
     $('#add_list_tax_modal').on('hidden.bs.modal', function (e) {
         $("#list_tax").val('').removeClass('is-valid').removeClass('is-invalid');
@@ -735,6 +732,16 @@ var Del_tbody_data_all = function Del_tbody_data_all() {
     })
     .catch(function (error) {
         console.log(error);
+    });
+}
+
+var del_address_modal = function del_address_modal(e) {
+    $("#table_list_address_modal").modal('hide');
+    $("#btn_modal_del_address").attr('address_id', $(e).attr('address_id'));
+    $("#del_address_modal").modal('show');
+
+    $('#del_address_modal').on('hidden.bs.modal', function (e) {
+        $("#del_address_note").val('').removeClass('is-valid').removeClass('is-invalid');
     });
 }
 
