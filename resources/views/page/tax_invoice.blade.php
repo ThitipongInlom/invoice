@@ -111,7 +111,7 @@
                                             <div class="form-group col-md-2 text-right">
                                                 <div class="btn-group" role="group" aria-label="Basic example">
                                                     <button type="button" class="btn btn-sm btn-secondary" onclick="Open_modal_add_list_tax();"><i class="fas fa-list"></i> เพิ่ม List</button>
-                                                    <button type="button" class="btn btn-sm btn-warning"><i class="fas fa-edit"></i></button>
+                                                    <button type="button" class="btn btn-sm btn-warning" onclick="Open_modal_table_list_tax();"><i class="fas fa-edit"></i></button>
                                                 </div>
                                             </div>
                                             <div class="form-group col-md-4">
@@ -290,7 +290,7 @@
                 <div class="modal fade" id="edit_address_modal" tabindex="-1" data-backdrop="static" role="dialog" aria-labelledby="edit_address_modalLabel" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-scrollable" role="document">
                         <div class="modal-content">
-                            <div class="modal-header bg-success p-2 pl-3">
+                            <div class="modal-header bg-warning p-2 pl-3">
                                 <h5 class="modal-title" id="edit_address_modalLabel"><i class="far fa-address-book"></i> แก้ไขข้อมูลลูกค้า</h5>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
@@ -308,7 +308,7 @@
                                                 <div class="col-md-6">
                                                     <label for="type_address">ประเภท</label>
                                                     <select class="custom-select custom-select-sm" id="edit_type_address">
-                                                        <option value="company" selected>บริษัท</option>
+                                                        <option value="company">บริษัท</option>
                                                         <option value="customer">ลูกค้า</option>
                                                     </select>                                                
                                                 </div>
@@ -335,7 +335,7 @@
                                             <div class="row">
                                                 <div class="col-md-12 text-center">
                                                     <div class="custom-control custom-radio custom-control-inline">
-                                                        <input type="radio" id="edit_radio_company_1" name="edit_radio_company" class="custom-control-input" value="company" checked>
+                                                        <input type="radio" id="edit_radio_company_1" name="edit_radio_company" class="custom-control-input" value="company">
                                                         <label class="custom-control-label" for="edit_radio_company_1">สำนักงานใหญ่</label>
                                                     </div>
                                                     <div class="custom-control custom-radio custom-control-inline">
@@ -345,7 +345,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="form-group branch_company">
+                                        <div class="form-group branch_company_edit">
                                         <hr>
                                             <div class="row">
                                                 <div class="col-md-2">
@@ -365,7 +365,7 @@
                                         <button type="button" class="btn btn-sm btn-block btn-danger" data-dismiss="modal"><i class="fas fa-times"></i> ปิด</button>
                                     </div>
                                     <div class="col-md-6">
-                                        <button type="button" class="btn btn-sm btn-block btn-success" onclick="Save_modal_search_address();"><i class="fas fa-save"></i> บันทึกข้อมูล</button>
+                                        <button type="button" class="btn btn-sm btn-block btn-warning" onclick="Save_modal_search_address_edit(this);" id="btn_modal_search_address_edit"><i class="fas fa-edit"></i> แก้ไขข้อมูลลูกค้า</button>
                                     </div>
                                 </div>
                             </div>
@@ -434,6 +434,68 @@
                         </div>
                     </div>
                 </div>
+            
+                <!-- Modal Table List Tax -->
+                <div class="modal fade" id="table_list_tax_modal" tabindex="-1" role="dialog" aria-labelledby="table_list_tax_modalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-scrollable" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header bg-warning p-2 pl-3">
+                                <h5 class="modal-title" id="table_list_tax_modalLabel"><i class="fas fa-edit"></i> แก้ไข List รายการ</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col-12 col-md-12">
+                                        <table class="table table-sm table-bordered" id="table_list_tax">
+                                            <thead>
+                                                <tr>
+                                                    <th width="5%">No.</th>
+                                                    <th width="55%">List Name</th>
+                                                    <th width="40%" class="text-center">Tool</th>
+                                                </tr>
+                                            <thead>
+                                            <tbody id="table_list_tax_body"><tbody>
+                                        </table>                                   
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal Edit list tax -->
+                <div class="modal fade" id="edit_list_tax_modal" tabindex="-1" data-backdrop="static" role="dialog" aria-labelledby="edit_list_tax_modalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header bg-warning p-2 pl-3">
+                                <h5 class="modal-title" id="edit_list_tax_modalLabel"><i class="fas fa-list"></i> แก้ไข List รายการ</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <input type="text" class="form-control form-control-sm" id="list_tax_edit" placeholder="กรอก รายการ List">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer" style="display:inline;">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <button type="button" class="btn btn-sm btn-block btn-danger" data-dismiss="modal"><i class="fas fa-times"></i> ยกเลิก</button>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <button type="button" class="btn btn-sm btn-block btn-success" id="btn_modal_edit_list_tax" onclick="Save_modal_edit_list_tax(this);"><i class="fas fa-save"></i> บันทึกข้อมูล</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             @include('layout/footer')
         </div>
     </body>

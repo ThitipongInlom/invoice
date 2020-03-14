@@ -39,5 +39,12 @@ Route::group(['prefix' => 'api/v1'], function () {
     Route::post('/Save_ref_no', 'page\tax_invoice@Save_ref_no');
     Route::post('/Save_vat_invoice', 'page\tax_invoice@Save_vat_invoice');
     Route::post('/Get_list_address', 'page\tax_invoice@Get_list_address');
+    Route::post('/Get_edit_address', 'page\tax_invoice@Get_edit_address');
+    Route::post('/Save_search_address_edit', 'page\tax_invoice@Save_search_address_edit');
+    Route::post('/Save_modal_del_address', 'page\tax_invoice@Save_modal_del_address');
+    Route::post('/Get_list_tax_table', 'page\tax_invoice@Get_list_tax_table');
+    Route::post('/Get_modal_edit_list_tax', 'page\tax_invoice@Get_modal_edit_list_tax');
+    Route::post('/Save_modal_edit_list_tax', 'page\tax_invoice@Save_modal_edit_list_tax');
+    Route::post('/Save_modal_del_list_tax', 'page\tax_invoice@Save_modal_del_list_tax');
 
 });

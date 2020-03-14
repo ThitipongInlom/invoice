@@ -279,6 +279,34 @@ class tax_invoice extends Controller
         }
     }
 
+    public function Save_search_address_edit(Request $request)
+    {
+        $address = address::find($request->address_id);
+        $address->company_name        = $request->company_name;
+        $address->type_address        = $request->type_address;
+        $address->company_address     = $request->company_address;
+        $address->tax_id              = $request->tax_id;
+        $address->phone               = $request->phone;
+        $address->company_type        = $request->company_type;
+        $address->branch_company_on   = $request->branch_company_on;
+        $address->branch_company_name = $request->branch_company_name;
+        $address->save();
+
+        // เพิ่ม Log ในการเพิ่ม Insert
+        $auth_user = Auth::user()->username;
+        $log_data_old = "null";
+        $log_data_new = '{"company_name": "'.$request->company_name.'","type_address":"'.$request->type_address.'","company_address":"'.$request->company_address.'","tax_id":"'.$request->tax_id.'","phone":"'.$request->phone.'","company_type":"'.$request->company_type.'","branch_company_on":"'.$request->branch_company_on.'","branch_company_name":"'.$request->branch_company_name.'"}';
+        $action_log = new log;
+        $action_log->log_action = 'Update';
+        $action_log->log_action_detail = 'Address';
+        $action_log->log_data_old = $log_data_old;
+        $action_log->log_data_new = $log_data_new;
+        $action_log->log_username = $auth_user;
+        $action_log->save();
+
+        return response()->json(['status' => 'success','error_text' => 'บันทึกข้อมูลเสร็จสิ้น'],200);
+    }
+
     public function Save_add_list_tax(Request $request)
     {
         $listtax = new listtax;
@@ -326,6 +354,108 @@ class tax_invoice extends Controller
         $address_data = address::get();
 
         return response()->json(['status' => 'success','error_text' => 'โหลดข้อมูลสำเร็จ', 'result' => $address_data],200);
+    }
+
+    public function Get_edit_address(Request $request)
+    {
+        $check_action = Auth::user()->action;
+        if ($check_action >= '2') { 
+            $address_data = address::where('address_id', $request->address_id)->get();
+            return response()->json(['status' => 'success','error_text' => 'โหลดข้อมูลสำเร็จ', 'result' => $address_data],200);
+        }else {
+            return response()->json(['status' => 'error','error_text' => 'เปิดหน้าแก้ไข ไม่สำเร็จ ไม่สามารถแก้ไขได้เนื่องจากสิทธ์การใช้งานไม่เพียงพอ'],200);
+        }
+    }
+
+    public function Save_modal_del_address(Request $request)
+    {
+        $check_action = Auth::user()->action;
+        if ($check_action >= '3') { 
+            $address = address::find($request->address_id);
+            $address->delete();
+
+            // เพิ่ม Log ในการเพิ่ม Insert
+            $auth_user = Auth::user()->username;
+            $log_data_old = '{"address_id": "'.$request->address_id.'"}';
+            $log_data_new = "null";
+            $action_log = new log;
+            $action_log->log_action = 'Delete';
+            $action_log->log_action_detail = 'Address';
+            $action_log->log_data_old = $log_data_old;
+            $action_log->log_data_new = $log_data_new;
+            $action_log->log_username = $auth_user;
+            $action_log->save();
+
+            return response()->json(['status' => 'success','error_text' => 'ลบข้อมูล สำเร็จ'],200);
+        }else {
+            return response()->json(['status' => 'error','error_text' => 'ลบข้อมูล ไม่สำเร็จ ไม่สามารถแก้ไขได้เนื่องจากสิทธ์การใช้งานไม่เพียงพอ'],200);
+        }
+    }
+
+    public function Get_list_tax_table(Request $request)
+    {
+        $listtax_data = listtax::get();
+
+        return response()->json(['status' => 'success','error_text' => 'โหลดข้อมูล สำเร็จ', 'result' => $listtax_data],200);
+    }
+
+    public function Get_modal_edit_list_tax(Request $request)
+    {
+        $listtax_data = listtax::where('list_id', $request->list_id)->get();
+
+        return response()->json(['status' => 'success','error_text' => 'โหลดข้อมูล สำเร็จ', 'result' => $listtax_data],200);
+    }
+
+    public function Save_modal_edit_list_tax(Request $request)
+    {
+        $check_action = Auth::user()->action;
+        if ($check_action >= '2') { 
+            $listtax = listtax::find($request->list_id);
+            $listtax->list_value = $request->list_tax;
+            $listtax->user_build = Auth::user()->username;
+            $listtax->save();
+
+            // เพิ่ม Log ในการเพิ่ม Insert
+            $auth_user = Auth::user()->username;
+            $log_data_old = 'null';
+            $log_data_new = '{"list_value": "'.$request->list_value.'"}';
+            $action_log = new log;
+            $action_log->log_action = 'Update';
+            $action_log->log_action_detail = 'List Tax';
+            $action_log->log_data_old = $log_data_old;
+            $action_log->log_data_new = $log_data_new;
+            $action_log->log_username = $auth_user;
+            $action_log->save();
+
+            return response()->json(['status' => 'success','error_text' => 'อัพเดตข้อมูล สำเร็จ'],200);
+        }else {
+            return response()->json(['status' => 'error','error_text' => 'ลบข้อมูล ไม่สำเร็จ ไม่สามารถแก้ไขได้เนื่องจากสิทธ์การใช้งานไม่เพียงพอ'],200);
+        }
+    }
+
+    public function Save_modal_del_list_tax(Request $request)
+    {
+        $check_action = Auth::user()->action;
+        if ($check_action >= '3') { 
+            $listtax = listtax::find($request->list_id);
+            $listtax->delete();
+
+            // เพิ่ม Log ในการเพิ่ม Insert
+            $auth_user = Auth::user()->username;
+            $log_data_old = '{"list_id": "'.$request->list_id.'"}';
+            $log_data_new = "null";
+            $action_log = new log;
+            $action_log->log_action = 'Delete';
+            $action_log->log_action_detail = 'List Tax';
+            $action_log->log_data_old = $log_data_old;
+            $action_log->log_data_new = $log_data_new;
+            $action_log->log_username = $auth_user;
+            $action_log->save();
+
+            return response()->json(['status' => 'success','error_text' => 'ลบข้อมูล สำเร็จ'],200);
+        }else {
+            return response()->json(['status' => 'error','error_text' => 'ลบข้อมูล ไม่สำเร็จ ไม่สามารถแก้ไขได้เนื่องจากสิทธ์การใช้งานไม่เพียงพอ'],200);
+        }
     }
     
 }
