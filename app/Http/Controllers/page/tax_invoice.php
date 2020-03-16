@@ -195,7 +195,7 @@ class tax_invoice extends Controller
         $invoiceitem_data = invoiceitem::where('invoiceitem_id', $request->invoiceitem_id)->get();
         $auth_user = Auth::user()->username;
         foreach ($invoiceitem_data as $key => $row) {
-            $log_data_old = '{"list_item":"'.$row->list_item.'","money_count":"'.$row->money.'","user_action":"'.$auth_user.'"}';
+            $log_data_old = '{"list_item":"'.$row->list_item.'","money_count":"'.$row->money.'","del_list_tax_item_note":"'.$request->del_list_tax_item_note.'","user_action":"'.$auth_user.'"}';
             $log_data_new = "null";
             $action_log = new log;
             $action_log->log_action = 'Delete';
@@ -373,7 +373,7 @@ class tax_invoice extends Controller
 
             // เพิ่ม Log ในการเพิ่ม Insert
             $auth_user = Auth::user()->username;
-            $log_data_old = '{"address_id": "'.$request->address_id.'"}';
+            $log_data_old = '{"address_id": "'.$request->address_id.'","del_address_note":"'.$request->del_address_note.'"}';
             $log_data_new = "null";
             $action_log = new log;
             $action_log->log_action = 'Delete';

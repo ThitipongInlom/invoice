@@ -108,7 +108,7 @@
                                             <div class="form-group col-md-2 text-right">
                                                 <button type="button" class="btn btn-sm btn-block btn-secondary" onclick="Open_modal_table_list_tax();"><i class="fas fa-list"></i> | รายการ</button>
                                             </div>
-                                            <div class="form-group col-md-4">
+                                            <div class="form-group col-md-6">
                                                 <div class="input-group input-group-sm">
                                                     <select class="form-control form-control-sm" id="list_item"></select>              
                                                 </div>                                  
@@ -118,9 +118,6 @@
                                             </div>
                                             <div class="form-group col-md-2">
                                                 <button type="button" class="btn btn-sm btn-block btn-info" onclick="Add_display_item();"><i class="fas fa-plus"></i> ทำรายการเพิ่ม</button>
-                                            </div>
-                                            <div class="form-group col-md-2">
-                                                <button type="button" class="btn btn-sm btn-block btn-danger" onclick="Del_tbody_data_all();"><i class="fas fa-trash"></i> ล้างรายการ</button>
                                             </div>
                                         </div>
                                         <hr>
@@ -544,6 +541,68 @@
                                     </div>
                                     <div class="col-md-6">
                                         <button type="button" class="btn btn-sm btn-block btn-success" id="btn_modal_edit_list_tax" onclick="Save_modal_edit_list_tax(this);"><i class="fas fa-save"></i> บันทึกข้อมูล</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal Del address -->
+                <div class="modal fade" id="del_address_modal" tabindex="-1" data-backdrop="static" role="dialog" aria-labelledby="del_address_modalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header bg-danger p-2 pl-3">
+                                <h5 class="modal-title" id="del_address_modalLabel"><i class="fas fa-list"></i> ลบ ข้อมูลลูกค้า</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <input type="text" class="form-control form-control-sm" id="del_address_note" placeholder="หมายเหตุ">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer" style="display:inline;">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <button type="button" class="btn btn-sm btn-block btn-danger" data-dismiss="modal"><i class="fas fa-times"></i> ยกเลิก</button>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <button type="button" class="btn btn-sm btn-block btn-success" id="btn_modal_del_address" onclick="Save_modal_del_address(this);"><i class="fas fa-save"></i> บันทึกข้อมูล</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal Del list_tax_item -->
+                <div class="modal fade" id="del_list_tax_item_modal" tabindex="-1" data-backdrop="static" role="dialog" aria-labelledby="del_list_tax_item_modalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header bg-danger p-2 pl-3">
+                                <h5 class="modal-title" id="del_list_tax_item_modalLabel"><i class="fas fa-list"></i> ลบ รายการ</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <input type="text" class="form-control form-control-sm" id="del_list_tax_item_note" placeholder="หมายเหตุ">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer" style="display:inline;">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <button type="button" class="btn btn-sm btn-block btn-danger" data-dismiss="modal"><i class="fas fa-times"></i> ยกเลิก</button>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <button type="button" class="btn btn-sm btn-block btn-success" id="btn_modal_del_list_tax_item" onclick="Del_tbody_data_item(this);"><i class="fas fa-save"></i> บันทึกข้อมูล</button>
                                     </div>
                                 </div>
                             </div>

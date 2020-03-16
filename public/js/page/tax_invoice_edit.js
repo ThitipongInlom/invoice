@@ -207,7 +207,7 @@ var Open_modal_table_list_address = function Open_modal_table_list_address() {
         $.each(response.data.result, function (key, value) {
             var btn_gen = '<button class="btn btn-sm btn-success" address_id="' + value.address_id + '" id="search_select_address" onclick="Save_search_address(this);"><i class="fas fa-hand-pointer"></i> ใช้งาน</button> ';
             var btn_edit = '<button class="btn btn-sm btn-warning" address_id="' + value.address_id + '" onclick="Open_modal_edit_address(this);"><i class="fas fa-edit"></i> แก้ไข</button>';
-            var btn_del = '<button class="btn btn-sm btn-danger" address_id="' + value.address_id + '"  onclick="Save_modal_del_address(this);"><i class="fas fa-trash"></i> ลบ</button>';
+            var btn_del = '<button class="btn btn-sm btn-danger" address_id="' + value.address_id + '"  onclick="del_address_modal(this);"><i class="fas fa-trash"></i> ลบ</button>';
             var table = "<tr>" +
                 "<td class='text-center'>" + i + "</td>" +
                 "<td>" + value.company_name + "</td>" +
@@ -334,46 +334,6 @@ var Open_modal_edit_address = function Open_modal_edit_address(e) {
     });
 }
 
-var Open_modal_table_list_address = function Open_modal_table_list_address() {
-    var data = {
-        table_address_search: $("#table_address_search").val()
-    }
-    axios({
-        method: 'post',
-        url: '../api/v1/Get_list_address',
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        },
-        data: data,
-    })
-    .then(function (response) {
-        console.log(response);
-        $("#table_list_address_body").html('');
-        var i = 1;
-        $.each(response.data.result, function (key, value) {
-            var btn_gen = '<button class="btn btn-sm btn-success" address_id="' + value.address_id + '" id="search_select_address" onclick="Save_search_address(this);"><i class="fas fa-hand-pointer"></i> ใช้งาน</button> ';
-            var btn_edit = '<button class="btn btn-sm btn-warning" address_id="' + value.address_id + '" onclick="Open_modal_edit_address(this);"><i class="fas fa-edit"></i> แก้ไข</button>';
-            var btn_del = '<button class="btn btn-sm btn-danger" address_id="' + value.address_id + '"  onclick="Save_modal_del_address(this);"><i class="fas fa-trash"></i> ลบ</button>';
-            var table = "<tr>" +
-                "<td class='text-center'>" + i + "</td>" +
-                "<td>" + value.company_name + "</td>" +
-                "<td>" + value.company_address + "</td>" +
-                "<td class='text-center'>" + btn_gen + " " + btn_edit + " " + btn_del + "</td>" +
-                "</tr>";
-
-            $("#table_list_address_body").append(table);
-            i++;
-        });
-    })
-    .catch(function (error) {
-        console.log(error);
-    });
-    // เช็คว่ามีการเปิด Modal หรอไม่ ถ้าไม่มี ให้ทำการเปิด Modal
-    if ($('#table_list_address_modal').hasClass('in') == false) {
-        $("#table_list_address_modal").modal('show');
-    }
-}
-
 var Save_modal_search_address_edit = function Save_modal_search_address_edit(e) {
     var Array_id = ['edit_company_name',
         'edit_type_address',
@@ -458,7 +418,7 @@ var Save_modal_del_address = function Save_modal_del_address(e) {
         console.log(response);
         Toastr[response.data.status](response.data.error_text);
         if (response.data.status == 'success') {
-            $("#table_list_address_modal").modal('hide');
+            $("#del_address_modal").modal('hide');
         }
     })
     .catch(function (error) {
@@ -711,7 +671,7 @@ var Get_tbody_data = function Get_tbody_data() {
                 $("#table_list_menu_body").append(table);
             } else {
                 $(response.data.results).each(function (index, value) {
-                    var btn = "<button class='btn btn-sm btn-danger' invoiceitem_id='" + value.invoiceitem_id + "' onclick='Del_tbody_data_item(this);'><i class='fas fa-trash'></i> ลบ</button>";
+                    var btn = "<button class='btn btn-sm btn-danger' invoiceitem_id='" + value.invoiceitem_id + "' onclick='del_list_tax_item_modal(this);'><i class='fas fa-trash'></i> ลบ</button>";
                     var table = "<tr class='tbody_data'>" +
                         "<td class='text-center'>" + no + "</td>" +
                         "<td class='text-left'>" + value.list_item + "</td>" +
@@ -805,23 +765,25 @@ var Save_vat_invoice = function Save_vat_invoice() {
 
 var Del_tbody_data_item = function Del_tbody_data_item(e) {
     var data = {
-        invoiceitem_id: $(e).attr('invoiceitem_id')
+        invoiceitem_id: $(e).attr('invoiceitem_id'),
+        del_list_tax_item_note: $("#del_list_tax_item_note").val()
     };
     axios({
-            method: 'post',
-            url: '../api/v1/Del_tbody_data_item',
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            data: data
-        })
-        .then(function (response) {
-            console.log(response);
-            Get_tbody_data();
-        })
-        .catch(function (error) {
-            console.log(error);
-        });
+        method: 'post',
+        url: '../api/v1/Del_tbody_data_item',
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        data: data
+    })
+    .then(function (response) {
+        console.log(response);
+        $("#del_list_tax_item_modal").modal('hide');
+        Get_tbody_data();
+    })
+    .catch(function (error) {
+        console.log(error);
+    });
 }
 
 var Del_tbody_data_all = function Del_tbody_data_all() {
@@ -829,20 +791,40 @@ var Del_tbody_data_all = function Del_tbody_data_all() {
         no_invoice: $("#no_invoice").val()
     };
     axios({
-            method: 'post',
-            url: '../api/v1/Del_tbody_data_all',
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            data: data
-        })
-        .then(function (response) {
-            console.log(response);
-            Get_tbody_data();
-        })
-        .catch(function (error) {
-            console.log(error);
-        });
+        method: 'post',
+        url: '../api/v1/Del_tbody_data_all',
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        data: data
+    })
+    .then(function (response) {
+        console.log(response);
+        Get_tbody_data();
+    })
+    .catch(function (error) {
+        console.log(error);
+    });
+}
+
+var del_address_modal = function del_address_modal(e) {
+    $("#table_list_address_modal").modal('hide');
+    $("#btn_modal_del_address").attr('address_id', $(e).attr('address_id'));
+    $("#del_address_modal").modal('show');
+
+    $('#del_address_modal').on('hidden.bs.modal', function (e) {
+        $("#del_address_note").val('').removeClass('is-valid').removeClass('is-invalid');
+    });
+}
+
+var del_list_tax_item_modal = function del_list_tax_item_modal(e) {
+    $("#table_list_tax_modal").modal('hide');
+    $("#btn_modal_del_list_tax_item").attr('invoiceitem_id', $(e).attr('invoiceitem_id'));
+    $("#del_list_tax_item_modal").modal('show');
+
+    $('#del_address_modal').on('hidden.bs.modal', function (e) {
+        $("#del_list_tax_item_note").val('').removeClass('is-valid').removeClass('is-invalid');
+    });
 }
 
 var format = function format(x) {
