@@ -5,9 +5,12 @@ Route::get('/login', 'auth\login@login_page')->name('login');
 Route::get('/register', 'auth\register@register_page')->name('register');
 // Dashboard
 Route::get('/', 'page\dashboard@dashboard_page')->middleware('auth');
+Route::get('/dashboard_bill', 'page\dashboard_bill@dashboard_page')->middleware('auth');
 // Tax Invoice
 Route::get('/tax_invoice', 'page\tax_invoice@tax_invoice_page')->middleware('auth');
 Route::get('/tax_invoice_edit/{invoice_no}', 'page\tax_invoice@tax_invoice_edit_page')->middleware('auth');
+// Tax Invoice Bill
+Route::get('/tax_invoce_bill', 'page\tax_invoice_bill@tax_invoice_bill_page')->middleware('auth');
 // User
 Route::get('/user', 'page\user@user_page')->middleware('auth');
 // API Print Invoice 
