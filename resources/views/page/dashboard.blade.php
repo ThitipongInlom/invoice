@@ -83,11 +83,11 @@
                             <div class="col-6 col-md-7">
                                 <div class="card">
                                     <div class="card-body">
-                                        <p class="mb-0" style="font-size:18px;"><b>บริษัท อัญชลีวัน จำกัด สำนักงานใหญ่</b></p>
-                                        <p class="mb-0" style="font-size:16px;"><b>โรงแรม เดอะซายน์</b></p>
-                                        <p class="mb-0" style="font-size:14px;">555/65 หมู่ 5 ต.นาเกลือ อ.บางละมุง จ.ชลบุรี 20150</p>
-                                        <p class="mb-0" style="font-size:14px;">โทร. 038-909800-20 แฟ๊กซ์ : 038-909888</p>
-                                        <p class="mb-0" style="font-size:14px;">เลขประจำตัวผู้เสียภาษีอากร 0 2055 45003 03 5 อัตราภาษีร้อนละ 7</p>
+                                        <p class="mb-0" style="font-size:18px;"><b id="left_hotel_titel"></b></p>
+                                        <p class="mb-0" style="font-size:16px;"><b id="left_hotel_name"></b></p>
+                                        <p class="mb-0" style="font-size:14px;"><span id="left_hotel_address"></span></p>
+                                        <p class="mb-0" style="font-size:14px;">โทร. <span id="left_hotel_phone"></span> แฟ๊กซ์ : <span id="left_hotel_fax"></span></p>
+                                        <p class="mb-0" style="font-size:14px;">เลขประจำตัวผู้เสียภาษีอากร <span id="left_hotel_vat"></span> อัตราภาษีร้อยละ 7</p>
                                     </div>
                                 </div>                                
                             </div>

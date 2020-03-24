@@ -57,8 +57,8 @@
                         </li>
                     </ul>
                 </li>
-                <li class="nav-item has-treeview  {{ Request::is('/setting', 'user') ? 'menu-open' : '' }}">
-                    <a href="#" class="nav-link {{ Request::is('/setting', 'user') ? 'active' : '' }}">
+                <li class="nav-item has-treeview  {{ Request::is('user', 'system') ? 'menu-open' : '' }}">
+                    <a href="#" class="nav-link {{ Request::is('user', 'system') ? 'active' : '' }}">
                         <i class="nav-icon fas fa-sliders-h"></i>
                         <p>
                             Setting
@@ -73,9 +73,9 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link">
+                            <a href="{{ url('system') }}" class="nav-link {{ Request::is('system') ? 'active' : '' }}">
                                 <i class="far fa-circle nav-icon"></i>
-                                <p>ตั้งค่าระบบ</p>
+                                <p>Setting System</p>
                             </a>
                         </li>
                     </ul>

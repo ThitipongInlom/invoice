@@ -152,7 +152,7 @@
                                                 <button type="button" class="btn btn-sm btn-block btn-dark" onclick="Api_print_invoice();"><i class='fas fa-print'></i> ปริ้นข้อมูล</button>
                                             </div>
                                             <div class="col-6 col-md-6">
-                                                <a class="btn btn-sm btn-block btn-primary" href="{{ url('') }}" role="button"><i class="fas fa-door-open"></i> หน้าหลัก</a>
+                                                <a class="btn btn-sm btn-block btn-primary" href="{{ url('dashboard_bill') }}" role="button"><i class="fas fa-door-open"></i> หน้าหลัก</a>
                                             </div>
                                         </div>
                                     </div>
@@ -542,5 +542,5 @@
     </body>
         <!-- All Js -->
         <script type="text/javascript" src="{{ asset('js/app.js') }}"></script>
-        <script type="text/javascript" src="{{ asset('js/page/tax_invoice.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('js/page/tax_invoice_bill.js') }}"></script>
 </html>

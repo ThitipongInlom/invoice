@@ -42,7 +42,7 @@ class tax_invoice extends Controller
 
             $datemonth = date('ymd');
             $invoice = invoice::select('invoice_no')
-                                ->where( 'invoice_no', 'like', '%'.$datemonth.'%')
+                                ->where( 'invoice_no', 'like', $prefix.'%'.$datemonth.'%')
                                 ->where('hotel', $request->select_hotel)
                                 ->orderBy('invoice_id', 'desc')
                                 ->limit(1)

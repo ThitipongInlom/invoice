@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use App\Model\log as log;
 use App\Model\user as user;
+use App\Model\hotel as hotel;
 use App\Model\invoice as invoice;
 use App\Model\invoiceitem as invoiceitem;
 
@@ -59,6 +60,7 @@ class dashboard extends Controller
     {
         $invoiceno   = invoice::where('invoice_id', $request->invoice_no)->value('invoice_no');
         $invoicebath = invoice::where('invoice_id', $request->invoice_no)->value('vat_money');
+        $invoicehotel= invoice::where('invoice_id', $request->invoice_no)->value('hotel');
         $invocedata  = invoice::join('address', 'invoice.address_no', '=', 'address.address_id')
                        ->where('invoice_id', $request->invoice_no)
                        ->get();
@@ -66,6 +68,7 @@ class dashboard extends Controller
                        ->where('invoice_id', $request->invoice_no)
                        ->get();
         $cover_invoicebath = $this->Cover_bath_to_str($invoicebath);
+        $card_detail = hotel::where('hotel_name', $invoicehotel)->get();
 
         return response()->json(['status' => 'success',
                                  'error_text' => 'ดึงข้อมูล สำเร็จ',
@@ -73,7 +76,8 @@ class dashboard extends Controller
                                  'invocedata' => $invocedata,
                                  'invoiceitem' => $invoiceitem,
                                  'cover_invoicebath' => $cover_invoicebath,
-                                 'invoice_no' => $request->invoice_no
+                                 'invoice_no' => $request->invoice_no,
+                                 'card_detail' => $card_detail
                                 ],200);
     }
 

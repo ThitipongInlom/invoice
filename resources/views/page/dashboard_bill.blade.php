@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>{{ config('app.name') }} | Dashboard</title>
+        <title>{{ config('app.name') }} | Dashboard Bill</title>
         <meta name="csrf-token" content="{{ csrf_token() }}">
         <!-- All Css -->
         <link rel="stylesheet" type="text/css" href="{{ asset('css/app.css') }}">
@@ -22,7 +22,7 @@
                     <div class="container-fluid">
                         <div class="row mb-2">
                             <div class="col-sm-6">
-                                <h1>List Invoice</h1>
+                                <h1>List Invoice Bill</h1>
                             </div>
                             <div class="col-sm-6">
                                 <!--

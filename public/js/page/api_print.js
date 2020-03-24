@@ -13,6 +13,15 @@ axios({
     console.log(response);
     // เซ็ตข้อมูลบน Modal
     $(".view_invoice_no").html(response.data.invoiceno);
+    // ตั้งค่า ส่วน บนซ้ายส่วนข้อมูลของโรงแรม
+    $(response.data.card_detail).each(function (index, value) {
+        $("#left_hotel_titel").html(value.hotel_titel);
+        $("#left_hotel_name").html(value.hotel_name_display);
+        $("#left_hotel_address").html(value.hotel_address);
+        $("#left_hotel_phone").html(value.hotel_phone);
+        $("#left_hotel_fax").html(value.hotel_fax);
+        $("#left_hotel_vat").html(value.hotel_vat);
+    });
     // ตั้งค่าส่วนหัว Table
     $(response.data.invocedata).each(function (index, value) {
         $(".view_company_name").html(value.company_name);

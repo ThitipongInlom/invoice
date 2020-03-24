@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: 24 มี.ค. 2020 เมื่อ 04:41 PM
+-- Generation Time: 24 มี.ค. 2020 เมื่อ 06:40 PM
 -- เวอร์ชันของเซิร์ฟเวอร์: 10.4.11-MariaDB
 -- PHP Version: 7.4.1
 
@@ -77,7 +77,7 @@ CREATE TABLE `hotel` (
 
 INSERT INTO `hotel` (`hotel_id`, `hotel_name`, `hotel_tax_invoice`, `hotel_tax_invoice_bill`, `hotel_titel`, `hotel_name_display`, `hotel_address`, `hotel_phone`, `hotel_fax`, `hotel_vat`) VALUES
 (1, 'TheZign', 'Q', 'J', 'บริษัท อัญชลีวัน จำกัด สำนักงานใหญ่', 'โรงแรม เดอะซายน์', '555/65 หมู่ 5 ต.นาเกลือ อ.บางละมุง จ.ชลบุรี 20150', '038-909800-20 ', '038-909888', '0 2055 45003 03 5'),
-(2, 'Z2', 'Z', 'A', NULL, NULL, NULL, NULL, NULL, NULL);
+(2, 'Z2', 'Z', 'A', 'บริษัท อัญชลีวัน จำกัด สำนักงานใหญ่', 'โรงแรม ซีทรูบายเดอะซายน์', '555/65 หมู่ 5 ต.นาเกลือ อ.บางละมุง จ.ชลบุรี 20150', '038-909800-20 ', '038-909888', '0 2055 45003 03 5');
 
 -- --------------------------------------------------------
 
@@ -117,7 +117,9 @@ INSERT INTO `invoice` (`invoice_id`, `invoice_no`, `invoice_type`, `address_no`,
 (299, 'Q200323001', NULL, '19', NULL, 'TheZign', 'ทดสอบ', 'ทดสอบ2', NULL, NULL, NULL, NULL, 'confirm', 'nice', '2020-03-23 12:25:37', '2020-03-23 12:25:37'),
 (300, 'Q200323002', NULL, '19', NULL, 'TheZign', 'ทดสอบ', 'ทดสอบ2', NULL, NULL, NULL, NULL, 'confirm', 'nice', '2020-03-23 12:26:06', '2020-03-23 12:26:07'),
 (301, 'Q200324001', NULL, '19', NULL, 'TheZign', 'ทดสอบ', 'ทดสอบ2', NULL, NULL, NULL, NULL, 'confirm', 'nice', '2020-03-24 17:30:30', '2020-03-24 17:30:31'),
-(302, 'Q200324002', 'Invoice_tax', '19', NULL, 'TheZign', 'ทดสอบ', 'ทดสอบ2', '500', '35', '535', 'in_vat', 'confirm', 'nice', '2020-03-24 20:33:33', '2020-03-24 20:36:02');
+(302, 'Q200324002', 'Invoice_tax', '19', NULL, 'TheZign', 'ทดสอบ', 'ทดสอบ2', '500', '35', '535', 'in_vat', 'confirm', 'nice', '2020-03-24 20:33:33', '2020-03-24 20:36:02'),
+(303, 'J200324001', 'Invoice_bill', '19', NULL, 'TheZign', 'ทดสอบ', 'ทดสอบ2', NULL, NULL, NULL, NULL, 'confirm', 'nice', '2020-03-24 23:56:26', '2020-03-24 23:56:27'),
+(304, 'A200325001', 'Invoice_bill', '20', NULL, 'Z2', 'ทดสอบ2', 'gmeop', NULL, NULL, NULL, NULL, 'confirm', 'nice', '2020-03-25 00:36:31', '2020-03-25 00:36:32');
 
 -- --------------------------------------------------------
 
@@ -249,7 +251,11 @@ INSERT INTO `log` (`log_id`, `log_action`, `log_action_detail`, `log_data_old`, 
 (325, 'Update', 'Q200324002', 'null', '{\"full_money\":\"500\",\"not_vat_money\":\"35\",\"vat_money\":\"535\",\"type_vat\":\"\"}', 'nice', '2020-03-24 20:35:24', '2020-03-24 20:35:24'),
 (326, 'Update', 'Q200324002', 'null', '{\"full_money\":\"500\",\"not_vat_money\":\"35\",\"vat_money\":\"535\",\"type_vat\":\"in_vat\"}', 'nice', '2020-03-24 20:35:50', '2020-03-24 20:35:50'),
 (327, 'Update', 'Q200324002', 'null', '{\"full_money\":\"467.29\",\"not_vat_money\":\"32.71\",\"vat_money\":\"500\",\"type_vat\":\"ex_vat\"}', 'nice', '2020-03-24 20:36:00', '2020-03-24 20:36:00'),
-(328, 'Update', 'Q200324002', 'null', '{\"full_money\":\"500\",\"not_vat_money\":\"35\",\"vat_money\":\"535\",\"type_vat\":\"in_vat\"}', 'nice', '2020-03-24 20:36:02', '2020-03-24 20:36:02');
+(328, 'Update', 'Q200324002', 'null', '{\"full_money\":\"500\",\"not_vat_money\":\"35\",\"vat_money\":\"535\",\"type_vat\":\"in_vat\"}', 'nice', '2020-03-24 20:36:02', '2020-03-24 20:36:02'),
+(329, 'Insert', 'J200324001', 'null', '{\"invoice_no\":\"J200324001\",\"user_action\":\"nice\"}', 'nice', '2020-03-24 23:56:26', '2020-03-24 23:56:26'),
+(330, 'Update', 'J200324001', 'null', '{\"address_no\":\"19\",\"invoice_compary\":\"ทดสอบ\",\"invoice_address\":\"ทดสอบ2\",\"status_invoice\":\"confirm\"}', 'nice', '2020-03-24 23:56:27', '2020-03-24 23:56:27'),
+(331, 'Insert', 'A200325001', 'null', '{\"invoice_no\":\"A200325001\",\"user_action\":\"nice\"}', 'nice', '2020-03-25 00:36:31', '2020-03-25 00:36:31'),
+(332, 'Update', 'A200325001', 'null', '{\"address_no\":\"20\",\"invoice_compary\":\"ทดสอบ2\",\"invoice_address\":\"gmeop\",\"status_invoice\":\"confirm\"}', 'nice', '2020-03-25 00:36:32', '2020-03-25 00:36:32');
 
 -- --------------------------------------------------------
 
@@ -348,7 +354,7 @@ ALTER TABLE `hotel`
 -- AUTO_INCREMENT for table `invoice`
 --
 ALTER TABLE `invoice`
-  MODIFY `invoice_id` int(12) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=303;
+  MODIFY `invoice_id` int(12) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=305;
 
 --
 -- AUTO_INCREMENT for table `invoiceitem`
@@ -366,7 +372,7 @@ ALTER TABLE `list_tax`
 -- AUTO_INCREMENT for table `log`
 --
 ALTER TABLE `log`
-  MODIFY `log_id` int(12) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=329;
+  MODIFY `log_id` int(12) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=333;
 
 --
 -- AUTO_INCREMENT for table `user`

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\page;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Model\hotel as hotel;
 use App\Model\invoice as invoice;
 use App\Model\invoiceitem as invoiceitem;
 
@@ -19,6 +20,7 @@ class api_print extends Controller
         $get_invoice_id = invoice::where('invoice_no', $request->invoice_no)->value('invoice_id');
         $invoiceno   = invoice::where('invoice_id', $get_invoice_id)->value('invoice_no');
         $invoicebath = invoice::where('invoice_id', $get_invoice_id)->value('vat_money');
+        $invoicehotel= invoice::where('invoice_id', $get_invoice_id)->value('hotel');
         $invocedata  = invoice::join('address', 'invoice.address_no', '=', 'address.address_id')
                        ->where('invoice_id', $get_invoice_id)
                        ->get();
@@ -26,6 +28,7 @@ class api_print extends Controller
                        ->where('invoice_id', $get_invoice_id)
                        ->get();
         $cover_invoicebath = $this->Cover_bath_to_str($invoicebath);
+        $card_detail = hotel::where('hotel_name', $invoicehotel)->get();
 
         return response()->json(['status' => 'success',
                                  'error_text' => 'ดึงข้อมูล สำเร็จ',
@@ -33,7 +36,8 @@ class api_print extends Controller
                                  'invocedata' => $invocedata,
                                  'invoiceitem' => $invoiceitem,
                                  'cover_invoicebath' => $cover_invoicebath,
-                                 'invoice_no' => $request->invoice_no
+                                 'invoice_no' => $request->invoice_no,
+                                 'card_detail' => $card_detail
                                 ],200);
     }
 
