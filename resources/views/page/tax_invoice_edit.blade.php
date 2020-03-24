@@ -9,6 +9,8 @@
         <link rel="stylesheet" type="text/css" href="{{ asset('css/app.css') }}">
     </head>
     <body class="hold-transition sidebar-mini">
+        <!-- Hidden Data Setting -->
+        <input type="hidden" id="url_root" value="{{ $url_root }}">
         <div class="wrapper">
             @include('layout/head')
             @include('layout/menu')
@@ -142,7 +144,10 @@
                                 <div class="card">
                                     <div class="card-body">
                                         <div class="row">
-                                            <div class="col-12 col-md-12 text-center">
+                                            <div class="col-6 col-md-6">
+                                                <button type="button" class="btn btn-sm btn-block btn-dark" onclick="Api_print_invoice();"><i class='fas fa-print'></i> ปริ้นข้อมูล</button>
+                                            </div>
+                                            <div class="col-6 col-md-6 text-center">
                                                 <button type="button" class="btn btn-sm btn-block btn-primary" onclick="window.history.back();"><i class="fas fa-door-open"></i> หน้าหลัก</button>
                                             </div>
                                         </div>

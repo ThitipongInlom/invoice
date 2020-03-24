@@ -97,9 +97,14 @@ var Open_modal_add_user = function Open_modal_add_user() {
     });
 }
 
-var Open_modal_edit_user = function Open_modal_edit_user() {
+var Open_modal_edit_user = function Open_modal_edit_user(e) {
     $("#modal_edit_user").modal('show');
-    console.log('AAAA');
+    console.log(e);
+}
+
+var Oepn_modal_view_user = function Oepn_modal_view_user(e) {
+    $("#modal_view_user").modal('show');
+    console.log(e);
 }
 
 var Save_modal_add_user = function Save_modal_add_user() {

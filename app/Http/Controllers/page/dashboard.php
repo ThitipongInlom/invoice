@@ -23,7 +23,8 @@ class dashboard extends Controller
 
     public function table_dashbaord(Request $request)
     {
-        $invoice = invoice::where('hotel', $request->get('hotel'))->get();
+        $invoice = invoice::where('hotel', $request->get('hotel'))
+                          ->where('invoice_type', 'Invoice_tax')->get();
         return Datatables::of($invoice)
             ->editColumn('invoice_address', function($invoice) {
                 $result = $invoice->invoice_compary.' | '.$invoice->invoice_address;

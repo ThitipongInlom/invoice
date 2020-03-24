@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.9.0.1
+-- version 4.9.2
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 22, 2020 at 11:59 AM
--- Server version: 10.3.16-MariaDB
--- PHP Version: 7.3.7
+-- Generation Time: 24 มี.ค. 2020 เมื่อ 04:41 PM
+-- เวอร์ชันของเซิร์ฟเวอร์: 10.4.11-MariaDB
+-- PHP Version: 7.4.1
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -25,7 +25,7 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Table structure for table `address`
+-- โครงสร้างตาราง `address`
 --
 
 CREATE TABLE `address` (
@@ -44,7 +44,7 @@ CREATE TABLE `address` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
--- Dumping data for table `address`
+-- dump ตาราง `address`
 --
 
 INSERT INTO `address` (`address_id`, `company_name`, `type_address`, `company_address`, `tax_id`, `phone`, `company_type`, `branch_company_on`, `branch_company_name`, `user_build`, `created_at`, `updated_at`) VALUES
@@ -55,32 +55,40 @@ INSERT INTO `address` (`address_id`, `company_name`, `type_address`, `company_ad
 -- --------------------------------------------------------
 
 --
--- Table structure for table `hotel`
+-- โครงสร้างตาราง `hotel`
 --
 
 CREATE TABLE `hotel` (
   `hotel_id` int(12) NOT NULL,
   `hotel_name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `hotel_tax_invoice` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL
+  `hotel_tax_invoice` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `hotel_tax_invoice_bill` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `hotel_titel` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `hotel_name_display` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `hotel_address` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `hotel_phone` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `hotel_fax` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `hotel_vat` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
--- Dumping data for table `hotel`
+-- dump ตาราง `hotel`
 --
 
-INSERT INTO `hotel` (`hotel_id`, `hotel_name`, `hotel_tax_invoice`) VALUES
-(1, 'TheZign', 'Q'),
-(2, 'Z2', 'Z');
+INSERT INTO `hotel` (`hotel_id`, `hotel_name`, `hotel_tax_invoice`, `hotel_tax_invoice_bill`, `hotel_titel`, `hotel_name_display`, `hotel_address`, `hotel_phone`, `hotel_fax`, `hotel_vat`) VALUES
+(1, 'TheZign', 'Q', 'J', 'บริษัท อัญชลีวัน จำกัด สำนักงานใหญ่', 'โรงแรม เดอะซายน์', '555/65 หมู่ 5 ต.นาเกลือ อ.บางละมุง จ.ชลบุรี 20150', '038-909800-20 ', '038-909888', '0 2055 45003 03 5'),
+(2, 'Z2', 'Z', 'A', NULL, NULL, NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `invoice`
+-- โครงสร้างตาราง `invoice`
 --
 
 CREATE TABLE `invoice` (
   `invoice_id` int(12) NOT NULL,
   `invoice_no` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `invoice_type` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `address_no` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `ref_no` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `hotel` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
@@ -97,20 +105,24 @@ CREATE TABLE `invoice` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
--- Dumping data for table `invoice`
+-- dump ตาราง `invoice`
 --
 
-INSERT INTO `invoice` (`invoice_id`, `invoice_no`, `address_no`, `ref_no`, `hotel`, `invoice_compary`, `invoice_address`, `full_money`, `not_vat_money`, `vat_money`, `type_vat`, `status_invoice`, `user_create`, `created_at`, `updated_at`) VALUES
-(294, 'Q200316001', '19', NULL, 'TheZign', 'ทดสอบ', 'ทดสอบ2', '500', '35', '535', 'in_vat', 'confirm', 'nice', '2020-03-16 08:30:44', '2020-03-16 08:30:51'),
-(295, 'Q200316002', '19', NULL, 'TheZign', 'ทดสอบ', 'ทดสอบ2', '1000', '70', '1070', 'in_vat', 'confirm', 'nice', '2020-03-16 09:13:25', '2020-03-16 09:13:28'),
-(296, 'Q200316003', '19', NULL, 'TheZign', 'ทดสอบ', 'ทดสอบ2', '5000', '350', '5350', 'in_vat', 'confirm', 'nice', '2020-03-16 09:20:43', '2020-03-16 09:20:49'),
-(297, 'Q200316004', '19', NULL, 'TheZign', 'ทดสอบ', 'ทดสอบ2', '5000', '350', '5350', 'in_vat', 'confirm', 'nice', '2020-03-16 09:23:36', '2020-03-16 10:00:43'),
-(298, 'Q200316005', '19', NULL, 'TheZign', 'ทดสอบ', 'ทดสอบ2', '1000', '70', '1070', 'in_vat', 'confirm', 'nice', '2020-03-16 09:57:14', '2020-03-16 09:58:43');
+INSERT INTO `invoice` (`invoice_id`, `invoice_no`, `invoice_type`, `address_no`, `ref_no`, `hotel`, `invoice_compary`, `invoice_address`, `full_money`, `not_vat_money`, `vat_money`, `type_vat`, `status_invoice`, `user_create`, `created_at`, `updated_at`) VALUES
+(294, 'Q200316001', NULL, '19', NULL, 'TheZign', 'ทดสอบ', 'ทดสอบ2', '500', '35', '535', 'in_vat', 'confirm', 'nice', '2020-03-16 08:30:44', '2020-03-16 08:30:51'),
+(295, 'Q200316002', NULL, '19', NULL, 'TheZign', 'ทดสอบ', 'ทดสอบ2', '1000', '70', '1070', 'in_vat', 'confirm', 'nice', '2020-03-16 09:13:25', '2020-03-16 09:13:28'),
+(296, 'Q200316003', NULL, '19', NULL, 'TheZign', 'ทดสอบ', 'ทดสอบ2', '5000', '350', '5350', 'in_vat', 'confirm', 'nice', '2020-03-16 09:20:43', '2020-03-16 09:20:49'),
+(297, 'Q200316004', NULL, '19', NULL, 'TheZign', 'ทดสอบ', 'ทดสอบ2', '5000', '350', '5350', 'in_vat', 'confirm', 'nice', '2020-03-16 09:23:36', '2020-03-16 10:00:43'),
+(298, 'Q200316005', NULL, '19', NULL, 'TheZign', 'ทดสอบ', 'ทดสอบ2', '1000', '70', '1070', 'in_vat', 'confirm', 'nice', '2020-03-16 09:57:14', '2020-03-16 09:58:43'),
+(299, 'Q200323001', NULL, '19', NULL, 'TheZign', 'ทดสอบ', 'ทดสอบ2', NULL, NULL, NULL, NULL, 'confirm', 'nice', '2020-03-23 12:25:37', '2020-03-23 12:25:37'),
+(300, 'Q200323002', NULL, '19', NULL, 'TheZign', 'ทดสอบ', 'ทดสอบ2', NULL, NULL, NULL, NULL, 'confirm', 'nice', '2020-03-23 12:26:06', '2020-03-23 12:26:07'),
+(301, 'Q200324001', NULL, '19', NULL, 'TheZign', 'ทดสอบ', 'ทดสอบ2', NULL, NULL, NULL, NULL, 'confirm', 'nice', '2020-03-24 17:30:30', '2020-03-24 17:30:31'),
+(302, 'Q200324002', 'Invoice_tax', '19', NULL, 'TheZign', 'ทดสอบ', 'ทดสอบ2', '500', '35', '535', 'in_vat', 'confirm', 'nice', '2020-03-24 20:33:33', '2020-03-24 20:36:02');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `invoiceitem`
+-- โครงสร้างตาราง `invoiceitem`
 --
 
 CREATE TABLE `invoiceitem` (
@@ -123,19 +135,20 @@ CREATE TABLE `invoiceitem` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
--- Dumping data for table `invoiceitem`
+-- dump ตาราง `invoiceitem`
 --
 
 INSERT INTO `invoiceitem` (`invoiceitem_id`, `invoice_no`, `list_item`, `money`, `created_at`, `updated_at`) VALUES
 (201, 'Q200316001', 'room 28/03/2563-29-03/256.', '500', '2020-03-16 08:30:51', '2020-03-16 08:30:51'),
 (202, 'Q200316002', 'room 28/03/2563-29-03/256.', '1000', '2020-03-16 09:13:27', '2020-03-16 09:13:27'),
 (203, 'Q200316003', 'room 28/03/2563-29-03/256.', '5000', '2020-03-16 09:20:48', '2020-03-16 09:20:48'),
-(209, 'Q200316004', 'room 28/03/2563-29-03/256.', '5000', '2020-03-16 09:59:16', '2020-03-16 09:59:16');
+(209, 'Q200316004', 'room 28/03/2563-29-03/256.', '5000', '2020-03-16 09:59:16', '2020-03-16 09:59:16'),
+(210, 'Q200324002', 'room 28/03/2563-29-03/256.', '500', '2020-03-24 20:35:24', '2020-03-24 20:35:24');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `list_tax`
+-- โครงสร้างตาราง `list_tax`
 --
 
 CREATE TABLE `list_tax` (
@@ -147,7 +160,7 @@ CREATE TABLE `list_tax` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
--- Dumping data for table `list_tax`
+-- dump ตาราง `list_tax`
 --
 
 INSERT INTO `list_tax` (`list_id`, `list_value`, `user_build`, `created_at`, `updated_at`) VALUES
@@ -159,7 +172,7 @@ INSERT INTO `list_tax` (`list_id`, `list_value`, `user_build`, `created_at`, `up
 -- --------------------------------------------------------
 
 --
--- Table structure for table `log`
+-- โครงสร้างตาราง `log`
 --
 
 CREATE TABLE `log` (
@@ -174,7 +187,7 @@ CREATE TABLE `log` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
--- Dumping data for table `log`
+-- dump ตาราง `log`
 --
 
 INSERT INTO `log` (`log_id`, `log_action`, `log_action_detail`, `log_data_old`, `log_data_new`, `log_username`, `created_at`, `updated_at`) VALUES
@@ -223,12 +236,25 @@ INSERT INTO `log` (`log_id`, `log_action`, `log_action_detail`, `log_data_old`, 
 (312, 'Insert', 'Address', 'null', '{\"company_name\": \"f\",\"type_address\":\"company\",\"company_address\":\"ff\",\"tax_id\":\"f\",\"phone\":\"f\",\"user_build\":\"nice\",\"company_type\":\"company\",\"branch_company_on\":\"0000\",\"branch_company_name\":\"\"}', 'nice', '2020-03-16 13:22:39', '2020-03-16 13:22:39'),
 (313, 'Delete', 'Address', '{\"address_id\": \"28\",\"del_address_note\":\"\"}', 'null', 'nice', '2020-03-16 13:22:42', '2020-03-16 13:22:42'),
 (314, 'Insert', 'Address', 'null', '{\"company_name\": \"f\",\"type_address\":\"company\",\"company_address\":\"f\",\"tax_id\":\"f\",\"phone\":\"f\",\"user_build\":\"nice\",\"company_type\":\"company\",\"branch_company_on\":\"0000\",\"branch_company_name\":\"\"}', 'nice', '2020-03-16 13:24:20', '2020-03-16 13:24:20'),
-(315, 'Delete', 'Address', '{\"address_id\": \"29\",\"del_address_note\":\"\"}', 'null', 'nice', '2020-03-16 13:24:26', '2020-03-16 13:24:26');
+(315, 'Delete', 'Address', '{\"address_id\": \"29\",\"del_address_note\":\"\"}', 'null', 'nice', '2020-03-16 13:24:26', '2020-03-16 13:24:26'),
+(316, 'Insert', 'Q200323001', 'null', '{\"invoice_no\":\"Q200323001\",\"user_action\":\"nice\"}', 'nice', '2020-03-23 12:25:37', '2020-03-23 12:25:37'),
+(317, 'Update', 'Q200323001', 'null', '{\"address_no\":\"19\",\"invoice_compary\":\"ทดสอบ\",\"invoice_address\":\"ทดสอบ2\",\"status_invoice\":\"confirm\"}', 'nice', '2020-03-23 12:25:37', '2020-03-23 12:25:37'),
+(318, 'Insert', 'Q200323002', 'null', '{\"invoice_no\":\"Q200323002\",\"user_action\":\"nice\"}', 'nice', '2020-03-23 12:26:06', '2020-03-23 12:26:06'),
+(319, 'Update', 'Q200323002', 'null', '{\"address_no\":\"19\",\"invoice_compary\":\"ทดสอบ\",\"invoice_address\":\"ทดสอบ2\",\"status_invoice\":\"confirm\"}', 'nice', '2020-03-23 12:26:07', '2020-03-23 12:26:07'),
+(320, 'Insert', 'Q200324001', 'null', '{\"invoice_no\":\"Q200324001\",\"user_action\":\"nice\"}', 'nice', '2020-03-24 17:30:30', '2020-03-24 17:30:30'),
+(321, 'Update', 'Q200324001', 'null', '{\"address_no\":\"19\",\"invoice_compary\":\"ทดสอบ\",\"invoice_address\":\"ทดสอบ2\",\"status_invoice\":\"confirm\"}', 'nice', '2020-03-24 17:30:31', '2020-03-24 17:30:31'),
+(322, 'Insert', 'Q200324002', 'null', '{\"invoice_no\":\"Q200324002\",\"user_action\":\"nice\"}', 'nice', '2020-03-24 20:33:33', '2020-03-24 20:33:33'),
+(323, 'Update', 'Q200324002', 'null', '{\"address_no\":\"19\",\"invoice_compary\":\"ทดสอบ\",\"invoice_address\":\"ทดสอบ2\",\"status_invoice\":\"confirm\"}', 'nice', '2020-03-24 20:33:34', '2020-03-24 20:33:34'),
+(324, 'Insert', 'Q200324002', 'null', '{\"list_item\":\"room 28/03/2563-29-03/256.\",\"money_count\":\"500\",\"user_action\":\"nice\"}', 'nice', '2020-03-24 20:35:24', '2020-03-24 20:35:24'),
+(325, 'Update', 'Q200324002', 'null', '{\"full_money\":\"500\",\"not_vat_money\":\"35\",\"vat_money\":\"535\",\"type_vat\":\"\"}', 'nice', '2020-03-24 20:35:24', '2020-03-24 20:35:24'),
+(326, 'Update', 'Q200324002', 'null', '{\"full_money\":\"500\",\"not_vat_money\":\"35\",\"vat_money\":\"535\",\"type_vat\":\"in_vat\"}', 'nice', '2020-03-24 20:35:50', '2020-03-24 20:35:50'),
+(327, 'Update', 'Q200324002', 'null', '{\"full_money\":\"467.29\",\"not_vat_money\":\"32.71\",\"vat_money\":\"500\",\"type_vat\":\"ex_vat\"}', 'nice', '2020-03-24 20:36:00', '2020-03-24 20:36:00'),
+(328, 'Update', 'Q200324002', 'null', '{\"full_money\":\"500\",\"not_vat_money\":\"35\",\"vat_money\":\"535\",\"type_vat\":\"in_vat\"}', 'nice', '2020-03-24 20:36:02', '2020-03-24 20:36:02');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `user`
+-- โครงสร้างตาราง `user`
 --
 
 CREATE TABLE `user` (
@@ -247,11 +273,11 @@ CREATE TABLE `user` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
--- Dumping data for table `user`
+-- dump ตาราง `user`
 --
 
 INSERT INTO `user` (`user_id`, `username`, `password`, `name`, `department`, `hotel`, `type_user`, `action`, `ip_login`, `remember_token`, `created_at`, `updated_at`) VALUES
-(4, 'nice', '$2y$10$Kxu6mlhiaLASPg.a2ZSllu6pEBkUAgMG2/H293XrrVjv1QeMcC9ZO', 'Thitipong Inlom', 'IT', 'TheZign,Z2', 'admin', '3', '::1', 'BwBT6jCYP0NMaxyIBx7Cpxc9YABSZOgXkoTNVcBb', '2020-01-15 06:45:24', '2020-03-22 14:32:34'),
+(4, 'nice', '$2y$10$Kxu6mlhiaLASPg.a2ZSllu6pEBkUAgMG2/H293XrrVjv1QeMcC9ZO', 'Thitipong Inlom', 'IT', 'TheZign,Z2', 'admin', '3', '::1', 'ooKHWTBc5NJ1B0M6labXy2xXBRKV3eDoaisIp1tO', '2020-01-15 06:45:24', '2020-03-24 17:27:45'),
 (7, 'test', '$2y$10$WaPxk/ha0ZOQ0cIKHE8vx.qUPKEyhf2jldu2vbv9Gb6.abQ59CJty', 'TEST', 'IT', 'TheZign', 'user', '0', '::1', 'yj0kjTlMjbVtK5LzKyYYH4cI1q621KNW13QhOyUUq1axmGmwgUQ78HXgMHog', '2020-03-05 15:06:38', '2020-03-13 09:15:44'),
 (13, 'test1', '$2y$10$U9/KpJ3GtcOlkpl7LwUoNu1J1ANIevCePDrr/PWUPa.FLrZLnLyuG', 'TEST1', 'IT', 'TheZign', 'user', '2', '::1', 'P5BZjn33nKu6Y2yBdq5anShAPLVg1sgmiMNjS4ne', '2020-03-10 13:25:53', '2020-03-14 10:27:25'),
 (14, 'test2', '$2y$10$RUgIRFfowGm5WzHc.eupRumxe/rMMyzE9.cPD28aMOv1LEOUEmgMO', 'TEST2', 'IT', 'TheZign', 'user', '3', '172.16.1.99', 'TIDmpi757s4GmCvPEOjRCib5bViaKAL7Z5ss0Apd', '2020-03-10 13:26:39', '2020-03-14 10:02:17');
@@ -322,13 +348,13 @@ ALTER TABLE `hotel`
 -- AUTO_INCREMENT for table `invoice`
 --
 ALTER TABLE `invoice`
-  MODIFY `invoice_id` int(12) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=299;
+  MODIFY `invoice_id` int(12) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=303;
 
 --
 -- AUTO_INCREMENT for table `invoiceitem`
 --
 ALTER TABLE `invoiceitem`
-  MODIFY `invoiceitem_id` int(12) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=210;
+  MODIFY `invoiceitem_id` int(12) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=211;
 
 --
 -- AUTO_INCREMENT for table `list_tax`
@@ -340,7 +366,7 @@ ALTER TABLE `list_tax`
 -- AUTO_INCREMENT for table `log`
 --
 ALTER TABLE `log`
-  MODIFY `log_id` int(12) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=316;
+  MODIFY `log_id` int(12) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=329;
 
 --
 -- AUTO_INCREMENT for table `user`

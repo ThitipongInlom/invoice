@@ -31,6 +31,7 @@ Route::group(['prefix' => 'api/v1'], function () {
     Route::post('/Del_tbody_data_all', 'page\tax_invoice@Del_tbody_data_all');
     Route::post('/Get_create_tax_no', 'page\tax_invoice@Get_create_tax_no');
     Route::get('/table_dashboard', 'page\dashboard@table_dashbaord');
+    Route::get('/table_dashboard_bill', 'page\dashboard_bill@table_dashbaord');
     Route::get('/table_user', 'page\user@Get_user_all');
     Route::post('/Save_add_user', 'page\user@Save_add_user');
     Route::post('/Open_view_invoice', 'page\dashboard@Open_view_invoice');

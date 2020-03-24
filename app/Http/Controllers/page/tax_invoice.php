@@ -23,10 +23,11 @@ class tax_invoice extends Controller
 
     public function tax_invoice_edit_page(Request $request, $invoice_no)
     {
+        $url_root = $request->root();
         $invoice_data  = invoice::join('address', 'invoice.address_no', '=', 'address.address_id')
                                 ->where('invoice_no', $invoice_no)->get();
         $invoice_table = invoiceitem::where('invoice_no', $invoice_no)->get();
-        return view('page\tax_invoice_edit', ['invoice_no' => $invoice_no,'invoice_data' => $invoice_data,'invoice_table' => $invoice_table]);
+        return view('page\tax_invoice_edit', ['invoice_no' => $invoice_no,'invoice_data' => $invoice_data,'invoice_table' => $invoice_table,'url_root' => $url_root]);
     }
 
     public function Get_create_tax_no(Request $request)
@@ -58,6 +59,7 @@ class tax_invoice extends Controller
             $invoice_no = $prefix.$New_Code;
             $invoice = new invoice;
             $invoice->invoice_no = $invoice_no;
+            $invoice->invoice_type = 'Invoice_tax';
             $invoice->hotel      = $request->select_hotel;
             $invoice->user_create= Auth::user()->username;
             $invoice->save();

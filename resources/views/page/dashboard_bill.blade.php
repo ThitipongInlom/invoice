@@ -260,5 +260,5 @@
     </body>
         <!-- All Js -->
         <script type="text/javascript" src="{{ asset('js/app.js') }}"></script>
-        <script type="text/javascript" src="{{ asset('js/page/dashboard.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('js/page/dashboard_bill.js') }}"></script>
 </html>

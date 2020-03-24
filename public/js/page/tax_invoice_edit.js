@@ -827,6 +827,17 @@ var del_list_tax_item_modal = function del_list_tax_item_modal(e) {
     });
 }
 
+var Api_print_invoice = function Api_print_invoice(e) {
+    if ($("#no_invoice").val() != '') {
+        var imgWindow;
+        var url_root = $("#url_root").val();
+        var invoice_no = $("#no_invoice").val();
+        imgWindow = window.open(url_root + '/' + 'print/' + invoice_no, "", "width=800, height=600");
+    } else {
+
+    }
+}
+
 var format = function format(x) {
     return x.text;
 }

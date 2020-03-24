@@ -23,7 +23,7 @@ class user extends Controller
         $data = user_model::get();
         return Datatables::of($data)
                 ->addColumn('action', function ($data) {
-                    $btn  = "<button class='btn btn-xs btn-primary'><i class='fas fa-search'></i></button> ";
+                    $btn  = "<button class='btn btn-xs btn-primary' user_id='$data->user_id' onclick='Oepn_modal_view_user(this);'><i class='fas fa-search'></i></button> ";
                     $btn .= "<button class='btn btn-xs btn-warning' user_id='$data->user_id' onclick='Open_modal_edit_user(this);'><i class='fas fa-edit'></i></button>";
                     return $btn;
                 })       

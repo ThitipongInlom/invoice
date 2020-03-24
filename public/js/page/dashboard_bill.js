@@ -16,7 +16,7 @@ var table_dashboard = function table_dashboard() {
             ["10", "20", "ทั้งหมด"]
         ],
         "ajax": {
-            "url": 'api/v1/table_dashboard',
+            "url": 'api/v1/table_dashboard_bill',
             "type": 'get',
             "data": function (d) {
                 d.hotel = $('#select_hotel').val();
@@ -42,19 +42,18 @@ var table_dashboard = function table_dashboard() {
             "name": 'action',
         }],
         "columnDefs": [{
-                "className": 'text-left',
-                "targets": []
-            }, {
-                "className": 'text-center',
-                "targets": [3]
-            }, {
-                "className": 'text-right',
-                "targets": [2]
-            }, {
-                "className": 'text-truncate',
-                "targets": []
-            },
-        ],
+            "className": 'text-left',
+            "targets": []
+        }, {
+            "className": 'text-center',
+            "targets": [3]
+        }, {
+            "className": 'text-right',
+            "targets": [2]
+        }, {
+            "className": 'text-truncate',
+            "targets": []
+        }, ],
         "language": {
             "lengthMenu": "แสดง _MENU_ รายการ",
             "search": "ค้นหา:",
@@ -96,58 +95,58 @@ var Open_view_invoice = function Open_view_invoice(e) {
         invoice_no: $(e).attr('invoice_no')
     }
     axios({
-        method: 'post',
-        url: 'api/v1/Open_view_invoice',
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        },
-        data: data
-    })
-    .then(function (response) {
-        console.log(response);
-        // เซ็ตข้อมูลบน Modal
-        $("#view_invoice_no").html(response.data.invoiceno);
-        // ตั้งค่าส่วนหัว Table
-        $(response.data.invocedata).each(function (index, value) {
-            $("#view_company_name").html(value.company_name);
-            $("#view_company_address").html(value.company_address);
-            $("#view_tax_id").html(value.tax_id);
-            // เช็คว่า เป็นสำนักงานใหญ่หรือไม่
-            if (value.company_type == 'company') {
-                $('#view_company_type_company').prop('checked', true);
-                $('#view_company_type_branch_company').prop('checked', false);
-                $("#view_company_type_branch_company_text").html('..............................');
-            }else {
-                $('#view_company_type_company').prop('checked', false);
-                $('#view_company_type_branch_company').prop('checked', true);
-                $("#view_company_type_branch_company_text").html(value.branch_company_on);
-            }
+            method: 'post',
+            url: 'api/v1/Open_view_invoice',
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            data: data
+        })
+        .then(function (response) {
+            console.log(response);
+            // เซ็ตข้อมูลบน Modal
+            $("#view_invoice_no").html(response.data.invoiceno);
+            // ตั้งค่าส่วนหัว Table
+            $(response.data.invocedata).each(function (index, value) {
+                $("#view_company_name").html(value.company_name);
+                $("#view_company_address").html(value.company_address);
+                $("#view_tax_id").html(value.tax_id);
+                // เช็คว่า เป็นสำนักงานใหญ่หรือไม่
+                if (value.company_type == 'company') {
+                    $('#view_company_type_company').prop('checked', true);
+                    $('#view_company_type_branch_company').prop('checked', false);
+                    $("#view_company_type_branch_company_text").html('..............................');
+                } else {
+                    $('#view_company_type_company').prop('checked', false);
+                    $('#view_company_type_branch_company').prop('checked', true);
+                    $("#view_company_type_branch_company_text").html(value.branch_company_on);
+                }
+            });
+            // ตั้งค่าส่วน Table Tbody
+            $("#view_modal_table_tbody").html('');
+            $(response.data.invoiceitem).each(function (index, value) {
+                var i = index + 1;
+                var table = "<tr>" +
+                    "<th class='text-center'>" + i + "</th>" +
+                    "<td>" + value.list_item + "</td>" +
+                    "<td class='text-right' style='padding-right: 5px;'>" + formatNumber(value.money) + "</td>" +
+                    "</tr>";
+                $("#view_modal_table").append(table);
+            });
+            // ตั้งค่าส่วน Table Foot
+            $(response.data.invocedata).each(function (index, value) {
+                $("#view_modal_full_money").html(formatNumber(value.full_money));
+                $("#view_modal_not_vat_money").html(formatNumber(value.not_vat_money));
+                $("#view_modal_vat_money").html(formatNumber(value.vat_money));
+            });
+            //ตั้งค่าส่วน ตัวเลขที่เป็นภาษาไทย
+            $("#view_cover_invoicebath").html(response.data.cover_invoicebath);
+            $("#view_invoice").modal('show');
+        })
+        .catch(function (error) {
+            console.log(error);
+            Toastr['error']('ไม่สามารถเปิด ได้ เนื่องจากพบ ปัญหา หรือไม่มีข้อมูล !');
         });
-        // ตั้งค่าส่วน Table Tbody
-        $("#view_modal_table_tbody").html('');
-        $(response.data.invoiceitem).each(function (index, value) {
-            var i = index + 1;
-            var table = "<tr>" + 
-                            "<th class='text-center'>" + i + "</th>" +
-                            "<td>" + value.list_item + "</td>" +
-                            "<td class='text-right' style='padding-right: 5px;'>" + formatNumber(value.money) + "</td>" +
-                        "</tr>";
-            $("#view_modal_table").append(table);
-        });
-        // ตั้งค่าส่วน Table Foot
-        $(response.data.invocedata).each(function (index, value) {
-            $("#view_modal_full_money").html(formatNumber(value.full_money));
-            $("#view_modal_not_vat_money").html(formatNumber(value.not_vat_money));
-            $("#view_modal_vat_money").html(formatNumber(value.vat_money));
-        });
-        //ตั้งค่าส่วน ตัวเลขที่เป็นภาษาไทย
-        $("#view_cover_invoicebath").html(response.data.cover_invoicebath);
-        $("#view_invoice").modal('show');
-    })
-    .catch(function (error) {
-        console.log(error);
-        Toastr['error']('ไม่สามารถเปิด ได้ เนื่องจากพบ ปัญหา หรือไม่มีข้อมูล !');
-    });
 }
 
 var Open_edit_invoice = function Open_edit_invoice(e) {
@@ -164,10 +163,10 @@ var Open_edit_invoice = function Open_edit_invoice(e) {
         }, 500);
     }
 
-   $('#edit_invoice').on('hidden.bs.modal', function (e) {
-       $("#edit_invoice_username").val('').removeClass('is-invalid').removeClass('is-valid');
-       $("#edit_invoice_password").val('').removeClass('is-invalid').removeClass('is-valid');
-   });
+    $('#edit_invoice').on('hidden.bs.modal', function (e) {
+        $("#edit_invoice_username").val('').removeClass('is-invalid').removeClass('is-valid');
+        $("#edit_invoice_password").val('').removeClass('is-invalid').removeClass('is-valid');
+    });
 }
 
 var Save_edit_invoice = function Save_edit_invoice(e) {
@@ -184,28 +183,28 @@ var Save_edit_invoice = function Save_edit_invoice(e) {
     var check_data = Check_null_input(array);
     if (check_data == true) {
         axios({
-            method: 'post',
-            url: 'api/v1/Save_edit_invoice',
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            data: data
-        })
-        .then(function (response) {
-            console.log(response);
-            Toastr[response.data.status](response.data.error_text);
-            if (response.data.status == 'success') {
-                $('#table_dashboard').DataTable().draw();
-                $("#edit_invoice").modal('hide');
-                window.location.href = response.data.url_edit;
-            }else {
-                $("#edit_invoice").modal('hide');
-            }
-        })
-        .catch(function (error) {
-            console.log(error);
-        });
-    }else {
+                method: 'post',
+                url: 'api/v1/Save_edit_invoice',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                data: data
+            })
+            .then(function (response) {
+                console.log(response);
+                Toastr[response.data.status](response.data.error_text);
+                if (response.data.status == 'success') {
+                    $('#table_dashboard').DataTable().draw();
+                    $("#edit_invoice").modal('hide');
+                    window.location.href = response.data.url_edit;
+                } else {
+                    $("#edit_invoice").modal('hide');
+                }
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+    } else {
         Toastr['error']('กรุณา กรอกข้อมูล ให้ครบ !');
     }
 }
@@ -217,7 +216,7 @@ var Open_cancel_invoice = function Open_cancel_invoice(e) {
         $("#cancel_invoice_username").val($("#user_username").val());
         $("#cancel_invoice_password").val($("#user_username").val());
         this.Save_cancel_invoice();
-    }else{
+    } else {
         $("#cancel_invoice").modal('show');
         setTimeout(function () {
             $("#cancel_invoice_username").focus();
@@ -236,30 +235,30 @@ var Save_cancel_invoice = function Save_cancel_invoice() {
         'cancel_invoice_password',
     ];
     var data = {
-            username: $("#cancel_invoice_username").val(),
-            password: $("#cancel_invoice_password").val(),
-            invoice_no: $("#save_invoice_btn_cancel").attr('invoice_no')
+        username: $("#cancel_invoice_username").val(),
+        password: $("#cancel_invoice_password").val(),
+        invoice_no: $("#save_invoice_btn_cancel").attr('invoice_no')
     };
     var check_data = Check_null_input(array);
     if (check_data == true) {
         axios({
-            method: 'post',
-            url: 'api/v1/Save_cancel_invoice',
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            data: data
-        })
-        .then(function (response) {
-            console.log(response);
-            $('#table_dashboard').DataTable().draw();
-            $("#cancel_invoice").modal('hide');
-            Toastr[response.data.status](response.data.error_text);
-        })
-        .catch(function (error) {
-            console.log(error);
-        });
-    }else {
+                method: 'post',
+                url: 'api/v1/Save_cancel_invoice',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                data: data
+            })
+            .then(function (response) {
+                console.log(response);
+                $('#table_dashboard').DataTable().draw();
+                $("#cancel_invoice").modal('hide');
+                Toastr[response.data.status](response.data.error_text);
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+    } else {
         Toastr['error']('กรุณา กรอกข้อมูล ให้ครบ !');
     }
 }
@@ -267,7 +266,7 @@ var Save_cancel_invoice = function Save_cancel_invoice() {
 var formatNumber = function formatNumber(num) {
     if (num == null) {
         return '0.00';
-    }else {
+    } else {
         return parseFloat(num).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')
     }
 }

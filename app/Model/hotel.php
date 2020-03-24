@@ -16,6 +16,13 @@ class hotel extends Model
     protected $fillable = [
         'hotel_name',
         'hotel_tax_invoice',
+        'hotel_tax_invoice_bill',
+        'hotel_titel',
+        'hotel_name_display',
+        'hotel_address',
+        'hotel_phone',
+        'hotel_fax',
+        'hotel_vat'
     ];
 
     public $timestamps = false;
