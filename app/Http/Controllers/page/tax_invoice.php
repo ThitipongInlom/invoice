@@ -59,7 +59,6 @@ class tax_invoice extends Controller
             $invoice_no = $prefix.$New_Code;
             $invoice = new invoice;
             $invoice->invoice_no = $invoice_no;
-            $invoice->invoice_type = 'Invoice_tax';
             $invoice->hotel      = $request->select_hotel;
             $invoice->user_create= Auth::user()->username;
             $invoice->save();

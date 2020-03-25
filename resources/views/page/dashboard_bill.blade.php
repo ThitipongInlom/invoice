@@ -40,7 +40,7 @@
                             <div class="card-header">
                                 <h3 class="card-title"><b>ข้อมูล Invoice</b></h3>
                                 <div class="card-tools">
-
+                                    <a class="btn btn-sm btn-success" href="{{ url('/tax_invoice_bill') }}" role="button"><i class="fas fa-file-invoice"></i> Create Invoice</a>
                                 </div>
                             </div>
                             <div class="card-body">

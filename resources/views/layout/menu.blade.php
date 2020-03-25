@@ -11,8 +11,8 @@
 
         <nav class="mt-2">
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-                <li class="nav-item has-treeview  {{ Request::is('/','tax_invoice') ? 'menu-open' : '' }}">
-                    <a href="#" class="nav-link {{ Request::is('/', 'tax_invoice') ? 'active' : '' }}">
+                <li class="nav-item has-treeview  {{ Request::is('/') ? 'menu-open' : '' }}">
+                    <a href="#" class="nav-link {{ Request::is('/') ? 'active' : '' }}">
                         <i class="nav-icon fas fa-tachometer-alt"></i>
                         <p>
                             Invoice
@@ -26,16 +26,10 @@
                                 <p>List Invoice</p>
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a href="{{ url('/tax_invoice') }}" class="nav-link {{ Request::is('tax_invoice') ? 'active' : '' }}">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Create Invoice</p>
-                            </a>
-                        </li>
                     </ul>
                 </li>
-                <li class="nav-item has-treeview  {{ Request::is('dashboard_bill', 'tax_invoce_bill') ? 'menu-open' : '' }}">
-                    <a href="#" class="nav-link {{ Request::is('dashboard_bill', 'tax_invoce_bill') ? 'active' : '' }}">
+                <li class="nav-item has-treeview  {{ Request::is('dashboard_bill') ? 'menu-open' : '' }}">
+                    <a href="#" class="nav-link {{ Request::is('dashboard_bill') ? 'active' : '' }}">
                         <i class="nav-icon fas fa-tachometer-alt"></i>
                         <p>
                             Invoice Bill
@@ -47,12 +41,6 @@
                             <a href="{{ url('/dashboard_bill') }}" class="nav-link {{ Request::is('dashboard_bill') ? 'active' : '' }}">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>List Invoice Bill</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ url('/tax_invoce_bill') }}" class="nav-link {{ Request::is('tax_invoce_bill') ? 'active' : '' }}">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Create Invoice Bill</p>
                             </a>
                         </li>
                     </ul>

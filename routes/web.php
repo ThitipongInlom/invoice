@@ -10,7 +10,7 @@ Route::get('/dashboard_bill', 'page\dashboard_bill@dashboard_page')->middleware(
 Route::get('/tax_invoice', 'page\tax_invoice@tax_invoice_page')->middleware('auth');
 Route::get('/tax_invoice_edit/{invoice_no}', 'page\tax_invoice@tax_invoice_edit_page')->middleware('auth');
 // Tax Invoice Bill
-Route::get('/tax_invoce_bill', 'page\tax_invoice_bill@tax_invoice_bill_page')->middleware('auth');
+Route::get('/tax_invoice_bill', 'page\tax_invoice_bill@tax_invoice_bill_page')->middleware('auth');
 // User
 Route::get('/user', 'page\user@user_page')->middleware('auth');
 // System
@@ -28,20 +28,28 @@ Route::group(['prefix' => 'api/v1'], function () {
     Route::get('/Do_logout', 'auth\login@Do_logout');
     // Get_list_tax
     Route::get('/Get_list_tax', 'page\tax_invoice@Get_list_tax');
+    Route::get('/Get_list_tax_bill', 'page\tax_invoice_bill@Get_list_tax');
     // Get_tbody_data
     Route::post('/Get_tbody_data', 'page\tax_invoice@Get_tbody_data');
+    Route::post('/Get_tbody_data_bill', 'page\tax_invoice_bill@Get_tbody_data');
     // Set_data_display
     Route::post('/Set_data_display', 'page\tax_invoice@Set_data_display');
+    Route::post('/Set_data_display_bill', 'page\tax_invoice_bill@Set_data_display');
     // Save_search_address
     Route::post('/Save_search_address', 'page\tax_invoice@Save_search_address');
+    Route::post('/Save_search_address_bill', 'page\tax_invoice_bill@Save_search_address');
     // Save_add_list_tax
     Route::post('/Save_add_list_tax', 'page\tax_invoice@Save_add_list_tax');
+    Route::post('/Save_add_list_tax_bill', 'page\tax_invoice_bill@Save_add_list_tax');
     // Save_invoice_item
     Route::post('/Save_invoice_item', 'page\tax_invoice@Save_invoice_item');
+    Route::post('/Save_invoice_item_bill', 'page\tax_invoice_bill@Save_invoice_item');
     // Del_Tbody_data_item
     Route::post('/Del_tbody_data_item', 'page\tax_invoice@Del_tbody_data_item');
+    Route::post('/Del_tbody_data_item_bill', 'page\tax_invoice_bill@Del_tbody_data_item');
     // Del_tbody_data_all
     Route::post('/Del_tbody_data_all', 'page\tax_invoice@Del_tbody_data_all');
+    Route::post('/Del_tbody_data_all_bill', 'page\tax_invoice_bill@Del_tbody_data_all');
     // Get_ create_tax_no
     Route::post('/Get_create_tax_no', 'page\tax_invoice@Get_create_tax_no');
     Route::post('/Get_create_tax_no_bill', 'page\tax_invoice_bill@Get_create_tax_no');
@@ -68,19 +76,26 @@ Route::group(['prefix' => 'api/v1'], function () {
     Route::post('/Save_vat_invoice', 'page\tax_invoice@Save_vat_invoice');
     // Get_list_address
     Route::post('/Get_list_address', 'page\tax_invoice@Get_list_address');
+    Route::post('/Get_list_address_bill', 'page\tax_invoice_bill@Get_list_address');
     // Get_edit_address
     Route::post('/Get_edit_address', 'page\tax_invoice@Get_edit_address');
+    Route::post('/Get_edit_address_bill', 'page\tax_invoice_bill@Get_edit_address');
     // Save_search_address_edit
     Route::post('/Save_search_address_edit', 'page\tax_invoice@Save_search_address_edit');
     // Save_modal_del_address
     Route::post('/Save_modal_del_address', 'page\tax_invoice@Save_modal_del_address');
+    Route::post('/Save_modal_del_address_bill', 'page\tax_invoice_bill@Save_modal_del_address');
     // Get_list_tax_table
     Route::post('/Get_list_tax_table', 'page\tax_invoice@Get_list_tax_table');
+    Route::post('/Get_list_tax_table_bill', 'page\tax_invoice_bill@Get_list_tax_table');
     // Get_modal_Edit_list_tax
     Route::post('/Get_modal_edit_list_tax', 'page\tax_invoice@Get_modal_edit_list_tax');
+    Route::post('/Get_modal_edit_list_tax_bill', 'page\tax_invoice_bill@Get_modal_edit_list_tax');
     // Save_modal_edit_list_tax
     Route::post('/Save_modal_edit_list_tax', 'page\tax_invoice@Save_modal_edit_list_tax');
+    Route::post('/Save_modal_edit_list_tax_bill', 'page\tax_invoice_bill@Save_modal_edit_list_tax');
     // Save_modal_del_list_tax
     Route::post('/Save_modal_del_list_tax', 'page\tax_invoice@Save_modal_del_list_tax');
+    Route::post('/Save_modal_del_list_tax_bill', 'page\tax_invoice_bill@Save_modal_del_list_tax');
 
 });

@@ -7,11 +7,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Model\log as log;
 use App\Model\hotel as hotel;
-use App\Model\districts as districts;
-use App\Model\address as address;
-use App\Model\listtax as listtax;
-use App\Model\invoice as invoice;
-use App\Model\invoiceitem as invoiceitem;
+use App\Model\address_bill as address_bill;
+use App\Model\listtax_bill as listtax_bill;
+use App\Model\invoice_bill as invoice_bill;
+use App\Model\invoiceitem_bill as invoiceitem_bill;
 
 class tax_invoice_bill extends Controller
 {
@@ -24,9 +23,9 @@ class tax_invoice_bill extends Controller
     public function tax_invoice_edit_page(Request $request, $invoice_no)
     {
         $url_root = $request->root();
-        $invoice_data  = invoice::join('address', 'invoice.address_no', '=', 'address.address_id')
+        $invoice_data  = invoice_bill::join('address_bill', 'invoice_bill.address_no', '=', 'address_bill.address_id')
                                 ->where('invoice_no', $invoice_no)->get();
-        $invoice_table = invoiceitem::where('invoice_no', $invoice_no)->get();
+        $invoice_table = invoiceitem_bill::where('invoice_no', $invoice_no)->get();
         return view('page\tax_invoice_edit', ['invoice_no' => $invoice_no,'invoice_data' => $invoice_data,'invoice_table' => $invoice_table,'url_root' => $url_root]);
     }
 
@@ -41,7 +40,7 @@ class tax_invoice_bill extends Controller
             $prefix = hotel::where('hotel_name', $request->select_hotel)->value('hotel_tax_invoice_bill');
 
             $datemonth = date('ymd');
-            $invoice = invoice::select('invoice_no')
+            $invoice = invoice_bill::select('invoice_no')
                                 ->where( 'invoice_no', 'like', $prefix.'%'.$datemonth.'%')
                                 ->where('hotel', $request->select_hotel)
                                 ->orderBy('invoice_id', 'desc')
@@ -58,9 +57,8 @@ class tax_invoice_bill extends Controller
             }
 
             $invoice_no = $prefix.$New_Code;
-            $invoice = new invoice;
+            $invoice = new invoice_bill;
             $invoice->invoice_no = $invoice_no;
-            $invoice->invoice_type = 'Invoice_bill';
             $invoice->hotel      = $request->select_hotel;
             $invoice->user_create= Auth::user()->username;
             $invoice->save();
@@ -90,7 +88,7 @@ class tax_invoice_bill extends Controller
         $row_array = array();
         $text = $request->get('text');
 
-        $districts = listtax::where('list_value', 'like', "%$text%")
+        $districts = listtax_bill::where('list_value', 'like', "%$text%")
                                 ->groupBy('list_value')
                                 ->orderBy('list_value', 'asc')
                                 ->get();
@@ -105,10 +103,10 @@ class tax_invoice_bill extends Controller
 
     public function Set_data_display(Request $request)
     {
-        $result = address::where('address_id', $request->search_select_address)->get();
+        $result = address_bill::where('address_id', $request->search_select_address)->get();
         foreach ($result as $key => $row) {
-            $invoice_id = invoice::where('invoice_no', $request->no_invoice)->value('invoice_id');
-            $invoice = invoice::find($invoice_id);
+            $invoice_id = invoice_bill::where('invoice_no', $request->no_invoice)->value('invoice_id');
+            $invoice = invoice_bill::find($invoice_id);
             $invoice->address_no          = $row->address_id;
             $invoice->invoice_compary     = $row->company_name;
             $invoice->invoice_address     = $row->company_address;
@@ -132,8 +130,8 @@ class tax_invoice_bill extends Controller
 
     public function Save_ref_no(Request $request)
     {
-        $invoice_id = invoice::where('invoice_no', $request->no_invoice)->value('invoice_id');
-        $invoice = invoice::find($invoice_id);
+        $invoice_id = invoice_bill::where('invoice_no', $request->no_invoice)->value('invoice_id');
+        $invoice = invoice_bill::find($invoice_id);
         $invoice->ref_no    = $request->ref_no;
         $invoice->save();
 
@@ -154,14 +152,14 @@ class tax_invoice_bill extends Controller
     public function Save_vat_invoice(Request $request)
     {
         if (isset($request->full_money)) {
-            $invoice_data = invoice::where('invoice_no', $request->no_invoice)->get();
+            $invoice_data = invoice_bill::where('invoice_no', $request->no_invoice)->get();
             foreach ($invoice_data as $key => $row) {
                 if ($row->full_money != $request->full_money OR
                     $row->not_vat_money != $request->not_vat_money OR
                     $row->vat_money != $request->vat_money OR
                     $row->type_vat != $request->type_vat) {
-                    $invoice_id = invoice::where('invoice_no', $request->no_invoice)->value('invoice_id');
-                    $invoice = invoice::find($invoice_id);
+                    $invoice_id = invoice_bill::where('invoice_no', $request->no_invoice)->value('invoice_id');
+                    $invoice = invoice_bill::find($invoice_id);
                     $invoice->full_money     = $request->full_money;
                     $invoice->not_vat_money  = $request->not_vat_money;
                     $invoice->vat_money      = $request->vat_money;
@@ -186,16 +184,16 @@ class tax_invoice_bill extends Controller
 
     public function Get_tbody_data(Request $request)
     {
-        $result = invoiceitem::where('invoice_no', $request->no_invoice)->get();
+        $result = invoiceitem_bill::where('invoice_no', $request->no_invoice)->get();
         $no_invoice = $request->no_invoice;
-        $sum_money = invoiceitem::where('invoice_no', $request->no_invoice)->sum('money');
+        $sum_money = invoiceitem_bill::where('invoice_no', $request->no_invoice)->sum('money');
         return response()->json(['status' => 'success','error_text' => 'โหลดข้อมูล จังหวัด เสร็จสิ้น', 'no_invoice' => $no_invoice, 'sum_money' => $sum_money, 'results' => $result],200);
     }
 
     public function Del_tbody_data_item(Request $request)
     {
         // เพิ่ม Log ในการเพิ่ม Insert
-        $invoiceitem_data = invoiceitem::where('invoiceitem_id', $request->invoiceitem_id)->get();
+        $invoiceitem_data = invoiceitem_bill::where('invoiceitem_id', $request->invoiceitem_id)->get();
         $auth_user = Auth::user()->username;
         foreach ($invoiceitem_data as $key => $row) {
             $log_data_old = '{"list_item":"'.$row->list_item.'","money_count":"'.$row->money.'","del_list_tax_item_note":"'.$request->del_list_tax_item_note.'","user_action":"'.$auth_user.'"}';
@@ -209,7 +207,7 @@ class tax_invoice_bill extends Controller
             $action_log->save();
         }
         // ลบข้อมูล Invoice
-        $invoiceitem = invoiceitem::find($request->invoiceitem_id);
+        $invoiceitem = invoiceitem_bill::find($request->invoiceitem_id);
         $invoiceitem->delete();
 
         return response()->json(['status' => 'success','error_text' => 'ลบข้อมูลเสร็จสิ้น'],200);
@@ -218,7 +216,7 @@ class tax_invoice_bill extends Controller
     public function Del_tbody_data_all(Request $request)
     {
         // เพิ่ม Log ในการเพิ่ม Insert
-        $invoiceitem_data = invoiceitem::where('invoice_no', $request->no_invoice)->get();
+        $invoiceitem_data = invoiceitem_bill::where('invoice_no', $request->no_invoice)->get();
         $auth_user = Auth::user()->username;
         foreach ($invoiceitem_data as $key => $row) {
             $log_data_old = '{"list_item":"'.$row->list_item.'","money_count":"'.$row->money.'","user_action":"'.$auth_user.'"}';
@@ -232,7 +230,7 @@ class tax_invoice_bill extends Controller
             $action_log->save();
         }
         // ลบข้อมูล Invoice
-        $invoiceitem = invoiceitem::where('invoice_no', $request->no_invoice);
+        $invoiceitem = invoiceitem_bill::where('invoice_no', $request->no_invoice);
         $invoiceitem->delete();
 
         return response()->json(['status' => 'success','error_text' => 'ลบข้อมูลเสร็จสิ้น'],200);
@@ -240,12 +238,12 @@ class tax_invoice_bill extends Controller
 
     public function Save_search_address(Request $request)
     {
-        $check_name = address::where('company_name', $request->company_name)->count();
+        $check_name = address_bill::where('company_name', $request->company_name)->count();
         if ($check_name == '1') {
 
             return response()->json(['status' => 'error','error_text' => 'มี บริษัทนี้อยู่แล้ว'],200);
         }else {
-            $address = new address;
+            $address = new address_bill;
             $address->company_name        = $request->company_name;
             $address->type_address        = $request->type_address;
             $address->company_address     = $request->company_address;
@@ -275,7 +273,7 @@ class tax_invoice_bill extends Controller
 
     public function Save_search_address_edit(Request $request)
     {
-        $address = address::find($request->address_id);
+        $address = address_bill::find($request->address_id);
         $address->company_name        = $request->company_name;
         $address->type_address        = $request->type_address;
         $address->company_address     = $request->company_address;
@@ -303,7 +301,7 @@ class tax_invoice_bill extends Controller
 
     public function Save_add_list_tax(Request $request)
     {
-        $listtax = new listtax;
+        $listtax = new listtax_bill;
         $listtax->list_value = $request->list_tax;
         $listtax->user_build = Auth::User()->username;
         $listtax->save();
@@ -314,10 +312,10 @@ class tax_invoice_bill extends Controller
     public function Save_invoice_item(Request $request)
     {
         $no_invoice = $request->no_invoice;
-        $list_item = listtax::where('list_id', $request->list_item)->value('list_value');
+        $list_item = listtax_bill::where('list_id', $request->list_item)->value('list_value');
         $money_count = $request->money_count;
         $auth_user = Auth::user()->username;
-        $invoiceitem = new invoiceitem;
+        $invoiceitem = new invoiceitem_bill;
         $invoiceitem->invoice_no = $no_invoice;
         $invoiceitem->list_item  = $list_item;
         $invoiceitem->money      = $money_count;
@@ -346,9 +344,9 @@ class tax_invoice_bill extends Controller
     public function Get_list_address(Request $request)
     {
         if ($request->table_address_search == "") {
-            $address_data = address::limit(10)->get();
+            $address_data = address_bill::limit(10)->get();
         } else {
-            $address_data = address::where('company_name', 'like', "%$request->table_address_search%")
+            $address_data = address_bill::where('company_name', 'like', "%$request->table_address_search%")
                                     ->orWhere('company_address', 'like', "%$request->table_address_search%")
                                     ->limit(10)->get();
         }
@@ -360,7 +358,7 @@ class tax_invoice_bill extends Controller
     {
         $check_action = Auth::user()->action;
         if ($check_action >= '2') { 
-            $address_data = address::where('address_id', $request->address_id)->get();
+            $address_data = address_bill::where('address_id', $request->address_id)->get();
             return response()->json(['status' => 'success','error_text' => 'โหลดข้อมูลสำเร็จ', 'result' => $address_data],200);
         }else {
             return response()->json(['status' => 'error','error_text' => 'เปิดหน้าแก้ไข ไม่สำเร็จ ไม่สามารถแก้ไขได้เนื่องจากสิทธ์การใช้งานไม่เพียงพอ'],200);
@@ -371,7 +369,7 @@ class tax_invoice_bill extends Controller
     {
         $check_action = Auth::user()->action;
         if ($check_action >= '3') { 
-            $address = address::find($request->address_id);
+            $address = address_bill::find($request->address_id);
             $address->delete();
 
             // เพิ่ม Log ในการเพิ่ม Insert
@@ -395,9 +393,9 @@ class tax_invoice_bill extends Controller
     public function Get_list_tax_table(Request $request)
     {
         if ($request->table_list_tax_search == "") {
-            $listtax_data = listtax::limit(10)->get();
+            $listtax_data = listtax_bill::limit(10)->get();
         }else {
-            $listtax_data = listtax::where('list_value', 'like', "%$request->table_list_tax_search%")->limit(10)->get();
+            $listtax_data = listtax_bill::where('list_value', 'like', "%$request->table_list_tax_search%")->limit(10)->get();
         }
 
         return response()->json(['status' => 'success','error_text' => 'โหลดข้อมูล สำเร็จ', 'result' => $listtax_data],200);
@@ -405,7 +403,7 @@ class tax_invoice_bill extends Controller
 
     public function Get_modal_edit_list_tax(Request $request)
     {
-        $listtax_data = listtax::where('list_id', $request->list_id)->get();
+        $listtax_data = listtax_bill::where('list_id', $request->list_id)->get();
 
         return response()->json(['status' => 'success','error_text' => 'โหลดข้อมูล สำเร็จ', 'result' => $listtax_data],200);
     }
@@ -414,7 +412,7 @@ class tax_invoice_bill extends Controller
     {
         $check_action = Auth::user()->action;
         if ($check_action >= '2') { 
-            $listtax = listtax::find($request->list_id);
+            $listtax = listtax_bill::find($request->list_id);
             $listtax->list_value = $request->list_tax;
             $listtax->user_build = Auth::user()->username;
             $listtax->save();
@@ -441,7 +439,7 @@ class tax_invoice_bill extends Controller
     {
         $check_action = Auth::user()->action;
         if ($check_action >= '3') { 
-            $listtax = listtax::find($request->list_id);
+            $listtax = listtax_bill::find($request->list_id);
             $listtax->delete();
 
             // เพิ่ม Log ในการเพิ่ม Insert

@@ -4,12 +4,12 @@ namespace App\Model;
 
 use Illuminate\Database\Eloquent\Model;
 
-class invoice extends Model
+class invoice_bill extends Model
 {
     /*
-        invoice V 0.1
+        invoice_bill V 0.1
     */    
-    public $table = "invoice";
+    public $table = "invoice_bill";
     /**
      * รายชื่อ ตาราง ใน ดาต้าเบส
      */

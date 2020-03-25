@@ -85,7 +85,7 @@ var Save_search_address_update = function Save_search_address_update(e) {
     };
     axios({
             method: 'post',
-            url: 'api/v1/Set_data_display',
+            url: 'api/v1/Set_data_display_bill',
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
@@ -176,7 +176,7 @@ var Open_modal_edit_address = function Open_modal_edit_address(e) {
     };
     axios({
             method: 'post',
-            url: 'api/v1/Get_edit_address',
+            url: 'api/v1/Get_edit_address_bill',
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
@@ -226,7 +226,7 @@ var Open_modal_table_list_address = function Open_modal_table_list_address() {
     }
     axios({
             method: 'post',
-            url: 'api/v1/Get_list_address',
+            url: 'api/v1/Get_list_address_bill',
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
@@ -282,7 +282,7 @@ var Save_modal_search_address = function Save_modal_search_address() {
         };
         axios({
                 method: 'post',
-                url: 'api/v1/Save_search_address',
+                url: 'api/v1/Save_search_address_bill',
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
@@ -355,7 +355,7 @@ var Save_modal_del_list_tax = function Save_modal_del_list_tax(e) {
     };
     axios({
             method: 'post',
-            url: 'api/v1/Save_modal_del_list_tax',
+            url: 'api/v1/Save_modal_del_list_tax_bill',
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
@@ -384,7 +384,7 @@ var Save_modal_del_address = function Save_modal_del_address(e) {
         };
         axios({
                 method: 'post',
-                url: 'api/v1/Save_modal_del_address',
+                url: 'api/v1/Save_modal_del_address_bill',
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
@@ -411,7 +411,7 @@ var Open_modal_table_list_tax = function Open_modal_table_list_tax() {
     }
     axios({
             method: 'post',
-            url: 'api/v1/Get_list_tax_table',
+            url: 'api/v1/Get_list_tax_table_bill',
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
@@ -449,7 +449,7 @@ var Open_modal_edit_list_tax = function Open_modal_edit_list_tax(e) {
     };
     axios({
             method: 'post',
-            url: 'api/v1/Get_modal_edit_list_tax',
+            url: 'api/v1/Get_modal_edit_list_tax_bill',
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
@@ -481,7 +481,7 @@ var Save_modal_edit_list_tax = function Save_modal_edit_list_tax(e) {
         };
         axios({
                 method: 'post',
-                url: 'api/v1/Save_modal_edit_list_tax',
+                url: 'api/v1/Save_modal_edit_list_tax_bill',
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
@@ -559,7 +559,7 @@ var Add_display_item = function Add_display_item() {
         };
         axios({
                 method: 'post',
-                url: 'api/v1/Save_invoice_item',
+                url: 'api/v1/Save_invoice_item_bill',
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
@@ -583,7 +583,7 @@ var Get_tbody_data = function Get_tbody_data() {
     };
     axios({
             method: 'post',
-            url: 'api/v1/Get_tbody_data',
+            url: 'api/v1/Get_tbody_data_bill',
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
@@ -700,7 +700,7 @@ var Del_tbody_data_item = function Del_tbody_data_item(e) {
     };
     axios({
             method: 'post',
-            url: 'api/v1/Del_tbody_data_item',
+            url: 'api/v1/Del_tbody_data_item_bill',
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
@@ -722,7 +722,7 @@ var Del_tbody_data_all = function Del_tbody_data_all() {
     };
     axios({
             method: 'post',
-            url: 'api/v1/Del_tbody_data_all',
+            url: 'api/v1/Del_tbody_data_all_bill',
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
