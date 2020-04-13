@@ -15,6 +15,7 @@ class listtax_bill extends Model
      */
     protected $fillable = [
         'list_value',
+        'list_type',
         'user_build'
     ];
 

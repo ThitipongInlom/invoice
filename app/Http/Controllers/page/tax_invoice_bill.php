@@ -186,7 +186,7 @@ class tax_invoice_bill extends Controller
     {
         $result = invoiceitem_bill::where('invoice_no', $request->no_invoice)->get();
         $no_invoice = $request->no_invoice;
-        $sum_money = invoiceitem_bill::where('invoice_no', $request->no_invoice)->sum('money');
+        $sum_money = invoiceitem_bill::where('invoice_no', $request->no_invoice)->sum('money_sum');
         return response()->json(['status' => 'success','error_text' => 'โหลดข้อมูล จังหวัด เสร็จสิ้น', 'no_invoice' => $no_invoice, 'sum_money' => $sum_money, 'results' => $result],200);
     }
 
@@ -208,29 +208,6 @@ class tax_invoice_bill extends Controller
         }
         // ลบข้อมูล Invoice
         $invoiceitem = invoiceitem_bill::find($request->invoiceitem_id);
-        $invoiceitem->delete();
-
-        return response()->json(['status' => 'success','error_text' => 'ลบข้อมูลเสร็จสิ้น'],200);
-    }
-
-    public function Del_tbody_data_all(Request $request)
-    {
-        // เพิ่ม Log ในการเพิ่ม Insert
-        $invoiceitem_data = invoiceitem_bill::where('invoice_no', $request->no_invoice)->get();
-        $auth_user = Auth::user()->username;
-        foreach ($invoiceitem_data as $key => $row) {
-            $log_data_old = '{"list_item":"'.$row->list_item.'","money_count":"'.$row->money.'","user_action":"'.$auth_user.'"}';
-            $log_data_new = "null";
-            $action_log = new log;
-            $action_log->log_action = 'Delete';
-            $action_log->log_action_detail = $row->invoice_no;
-            $action_log->log_data_old = $log_data_old;
-            $action_log->log_data_new = $log_data_new;
-            $action_log->log_username = $auth_user;
-            $action_log->save();
-        }
-        // ลบข้อมูล Invoice
-        $invoiceitem = invoiceitem_bill::where('invoice_no', $request->no_invoice);
         $invoiceitem->delete();
 
         return response()->json(['status' => 'success','error_text' => 'ลบข้อมูลเสร็จสิ้น'],200);
@@ -303,6 +280,7 @@ class tax_invoice_bill extends Controller
     {
         $listtax = new listtax_bill;
         $listtax->list_value = $request->list_tax;
+        $listtax->list_type = $request->list_type;
         $listtax->user_build = Auth::User()->username;
         $listtax->save();
 
@@ -313,16 +291,24 @@ class tax_invoice_bill extends Controller
     {
         $no_invoice = $request->no_invoice;
         $list_item = listtax_bill::where('list_id', $request->list_item)->value('list_value');
+        $list_type = listtax_bill::where('list_id', $request->list_item)->value('list_type');
         $money_count = $request->money_count;
+        $money_count_number = $request->money_count_number;
+        $money_count_type = $request->money_count_type;
+        $money_sum = $money_count * $money_count_number * $money_count_type;
         $auth_user = Auth::user()->username;
         $invoiceitem = new invoiceitem_bill;
-        $invoiceitem->invoice_no = $no_invoice;
-        $invoiceitem->list_item  = $list_item;
-        $invoiceitem->money      = $money_count;
+        $invoiceitem->invoice_no    = $no_invoice;
+        $invoiceitem->list_item     = $list_item;
+        $invoiceitem->list_type     = $list_type;
+        $invoiceitem->money         = $money_count;
+        $invoiceitem->money_number  = $money_count_number;
+        $invoiceitem->money_type    = $money_count_type;
+        $invoiceitem->money_sum     = $money_sum;
         $invoiceitem->save();
         // เพิ่ม Log ในการเพิ่ม Insert
         $log_data_old = "null";
-        $log_data_new = '{"list_item":"'.$list_item.'","money_count":"'.$money_count.'","user_action":"'.$auth_user.'"}';
+        $log_data_new = '{"list_item":"'.$list_item.'","money_count":"'.$money_count.'","money_count_number":"'.$money_count_number.'","money_count_type":"'.$money_count_type.'","money_sum":"'.$money_sum.'","user_action":"'.$auth_user.'"}';
         $action_log = new log;
         $action_log->log_action = 'Insert';
         $action_log->log_action_detail = $no_invoice;

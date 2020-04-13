@@ -10,7 +10,7 @@ $("#list_item").select2({
     theme: 'bootstrap4',
     placeholder: "เลือก List รายการ",
     ajax: {
-        url: 'api/v1/Get_list_tax',
+        url: 'api/v1/Get_list_tax_bill',
         dataType: 'json',
         data: function (params) {
             var query = {
@@ -422,11 +422,12 @@ var Open_modal_table_list_tax = function Open_modal_table_list_tax() {
             $("#table_list_tax_body").html('');
             var i = 1;
             $.each(response.data.result, function (key, value) {
-                var btn_edit = '<button class="btn btn-sm btn-warning" list_id="' + value.list_id + '" onclick="Open_modal_edit_list_tax(this);"><i class="fas fa-edit"></i> แก้ไข</button>';
-                var btn_del = '<button class="btn btn-sm btn-danger" list_id="' + value.list_id + '"  onclick="Save_modal_del_list_tax(this);"><i class="fas fa-trash"></i> ลบ</button>';
+                var btn_edit = '<button class="btn btn-sm btn-warning" list_id="' + value.list_id + '" onclick="Open_modal_edit_list_tax(this);"><i class="fas fa-edit"></i></button>';
+                var btn_del = '<button class="btn btn-sm btn-danger" list_id="' + value.list_id + '"  onclick="Save_modal_del_list_tax(this);"><i class="fas fa-trash"></i></button>';
                 var table = "<tr>" +
                     "<td class='text-center'>" + i + "</td>" +
                     "<td>" + value.list_value + "</td>" +
+                    "<td class='text-center'>" + value.list_type + "</td>" +
                     "<td class='text-center'>" + btn_edit + " " + btn_del + "</td>" +
                     "</tr>";
 
@@ -517,7 +518,8 @@ var Save_modal_add_list_tax = function Save_modal_add_list_tax() {
     var Check_rows = Check_null_input(Array_id);
     if (Check_rows == true) {
         var data = {
-            list_tax: $("#list_tax").val()
+            list_tax: $("#list_tax").val(),
+            list_type: $("#list_type").val()
         };
         axios({
                 method: 'post',
@@ -551,11 +553,19 @@ var Add_display_item = function Add_display_item() {
     } else if ($("#money_count").val() == '' || $("#money_count").val() == null) {
         Toastr["error"]("กรุณา กรอกจำนวนเงิน");
         $("#money_count").focus();
+    } else if ($("#money_count_number").val() == '' || $("#money_count").val() == null) {
+        Toastr["error"]("กรุณา จำนวน");
+        $("#money_count_number").focus();
+    } else if ($("#money_count_type").val() == '' || $("#money_count").val() == null) {
+        Toastr["error"]("กรุณา จำนวนหน่วยนับ");
+        $("#money_count_type").focus();
     } else {
         var data = {
             list_item: $("#list_item").val(),
             money_count: $("#money_count").val(),
-            no_invoice: $("#no_invoice").val()
+            no_invoice: $("#no_invoice").val(),
+            money_count_number: $("#money_count_number").val(),
+            money_count_type: $("#money_count_type").val()
         };
         axios({
                 method: 'post',
@@ -570,6 +580,8 @@ var Add_display_item = function Add_display_item() {
                 Get_tbody_data();
                 $("#list_item").val('').text('');
                 $("#money_count").val('');
+                $("#money_count_number").val('');
+                $("#money_count_type").val('');
             })
             .catch(function (error) {
                 console.log(error);
@@ -595,16 +607,20 @@ var Get_tbody_data = function Get_tbody_data() {
             $("#table_list_menu_body").html("");
             if (response.data.results.length == 0) {
                 var table = "<tr class='tbody_data'>" +
-                    "<td class='text-center' colspan='4'>ไม่มีข้อมูล</td>" +
+                    "<td class='text-center' colspan='7'>ไม่มีข้อมูล</td>" +
                     "</tr>";
                 $("#table_list_menu_body").append(table);
             } else {
                 $(response.data.results).each(function (index, value) {
+                    var total_sum = value.money * value.money_number * value.money_type;
                     var btn = "<button class='btn btn-sm btn-danger' invoiceitem_id='" + value.invoiceitem_id + "' onclick='del_list_tax_item_modal(this);'><i class='fas fa-trash'></i> ลบ</button>";
                     var table = "<tr class='tbody_data'>" +
                         "<td class='text-center'>" + no + "</td>" +
                         "<td class='text-left'>" + value.list_item + "</td>" +
-                        "<td class='text-right'>" + value.money + "</td>" +
+                        "<td class='text-center'>" + value.money + "</td>" +
+                        "<td class='text-center'>" + value.money_number + "</td>" +
+                        "<td class='text-center'>" + value.money_type + " " + value.list_type + "</td>" +
+                        "<td class='text-center totalSumItem'>" + total_sum + "</td>" +
                         "<td class='text-right'>" + btn + "</td>" +
                         "</tr>";
                     $("#table_list_menu_body").append(table);
@@ -620,6 +636,7 @@ var Get_tbody_data = function Get_tbody_data() {
 }
 
 var Get_tfoot_data = function Get_tfoot_data(e) {
+    console.log(e);
     var sum_money = e.sum_money;
     var full_money = e.sum_money;
     var not_vat_money = sum_money - (sum_money * 7 / 107);
@@ -629,35 +646,46 @@ var Get_tfoot_data = function Get_tfoot_data(e) {
     $("#table_list_menu_foot").html("");
 
     var table_ex = "<tr class='text-right table-secondary'>" +
-        "<td colspan='2'></td>" +
-        "<td>รวมเงิน</td>" +
-        "<td><b id='full_money'>" + formay_number(not_vat_money) + "</b> บาท</td>" +
+        "<td colspan='3'></td>" +
+        "<td colspan='2'>GRAND TOTAL</td>" +
+        "<td colspan='2'><b id='full_money'>" + formay_number(full_money) + "</b> บาท</td>" +
         "</tr>" +
         "<tr class='text-right table-secondary'>" +
-        "<td colspan='2'></td>" +
-        "<td class='text-right'>ภาษีมูลค่าเพิ่ม 7%</td>" +
-        "<td><b id='not_vat_money'>" + formay_number(vat_money) + "</b> บาท</td>" +
+        "<td colspan='3'></td>" +
+        "<td colspan='2' class='text-right'>SUB TOTAL</td>" +
+        "<td colspan='2'><b id='not_vat_money'>" + formay_number(not_vat_money) + "</b> บาท</td>" +
         "</tr>" +
         "<tr class='text-right table-secondary'>" +
-        "<td colspan='2'></td>" +
-        "<td class='text-right'>ยอดเงินรับสุทธิ</td>" +
-        "<td><b id='vat_money'>" + formay_number(full_money) + "</b> บาท</td>" +
+        "<td colspan='3'></td>" +
+        "<td colspan='2' class='text-right'>VAT 7%</td>" +
+        "<td colspan='2'><b id='vat_money'>" + formay_number(vat_money) + "</b> บาท</td>" +
+        "</tr>" +
+        "<tr class='text-right table-secondary'>" +
+        "<td colspan='3'></td>" +
+        "<td colspan='2' class='text-right'>TOTAL</td>" +
+        "<td colspan='2'><b id='total'>" + formay_number(full_money) + "</b> บาท</td>" +
         "</tr>";
     var table_in = "<tr class='text-right table-secondary'>" +
-        "<td colspan='2'></td>" +
-        "<td>รวมเงิน</td>" +
-        "<td><b id='full_money'>" + formay_number(full_money) + "</b> บาท</td>" +
+        "<td colspan='3'></td>" +
+        "<td colspan='2'>GRAND TOTAL</td>" +
+        "<td colspan='2'><b id='full_money'>" + formay_number(full_money) + "</b> บาท</td>" +
         "</tr>" +
         "<tr class='text-right table-secondary'>" +
-        "<td colspan='2'></td>" +
-        "<td class='text-right'>ภาษีมูลค่าเพิ่ม 7%</td>" +
-        "<td><b id='not_vat_money'>" + formay_number(vat_7) + "</b> บาท</td>" +
+        "<td colspan='3'></td>" +
+        "<td colspan='2' class='text-right'>SUB TOTAL</td>" +
+        "<td colspan='2'><b id='not_vat_money'>" + formay_number(not_vat_money) + "</b> บาท</td>" +
         "</tr>" +
         "<tr class='text-right table-secondary'>" +
-        "<td colspan='2'></td>" +
-        "<td class='text-right'>ยอดเงินรับสุทธิ</td>" +
-        "<td><b id='vat_money'>" + formay_number(monry_vat) + "</b> บาท</td>" +
+        "<td colspan='3'></td>" +
+        "<td colspan='2' class='text-right'>VAT 7%</td>" +
+        "<td colspan='2'><b id='vat_money'>" + formay_number(vat_money) + "</b> บาท</td>" +
+        "</tr>" +
+        "<tr class='text-right table-secondary'>" +
+        "<td colspan='3'></td>" +
+        "<td colspan='2' class='text-right'>TOTAL</td>" +
+        "<td colspan='2'><b id='total'>" + formay_number(full_money) + "</b> บาท</td>" +
         "</tr>";
+
     if (sum_money > 0) {
         if ($("input[name=vat_radio]:checked").val() == 'ex_vat') {
             $("#table_list_menu_foot").append(table_ex);
@@ -709,27 +737,6 @@ var Del_tbody_data_item = function Del_tbody_data_item(e) {
         .then(function (response) {
             console.log(response);
             $("#del_list_tax_item_modal").modal('hide');
-            Get_tbody_data();
-        })
-        .catch(function (error) {
-            console.log(error);
-        });
-}
-
-var Del_tbody_data_all = function Del_tbody_data_all() {
-    var data = {
-        no_invoice: $("#no_invoice").val()
-    };
-    axios({
-            method: 'post',
-            url: 'api/v1/Del_tbody_data_all_bill',
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            data: data
-        })
-        .then(function (response) {
-            console.log(response);
             Get_tbody_data();
         })
         .catch(function (error) {

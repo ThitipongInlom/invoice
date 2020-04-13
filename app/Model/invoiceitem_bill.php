@@ -17,6 +17,9 @@ class invoiceitem_bill extends Model
         'invoice_no',
         'list_item',
         'money',
+        'money_number',
+        'money_type',
+        'money_sum'
     ];
 
      /**

@@ -117,13 +117,16 @@
                                                 </div>                                  
                                             </div>
                                             <div class="form-group col-md-2">
-                                                <input type="number" class="form-control form-control-sm" min="1" id="money_count" placeholder="จำนวนเงิน">
+                                                <input type="number" class="form-control form-control-sm" min="1" id="money_count" placeholder="ราคา">
                                             </div>
+                                            <div class="form-group col-md-1">
+                                                <input type="number" class="form-control form-control-sm" min="1" id="money_count_number" placeholder="จำนวน">
+                                            </div>         
+                                            <div class="form-group col-md-1">
+                                                <input type="number" class="form-control form-control-sm" min="1" id="money_count_type" placeholder="หน่วย">
+                                            </div>                                      
                                             <div class="form-group col-md-2">
                                                 <button type="button" class="btn btn-sm btn-block btn-info" onclick="Add_display_item();"><i class="fas fa-plus"></i> ทำรายการเพิ่ม</button>
-                                            </div>
-                                            <div class="form-group col-md-2">
-                                                <button type="button" class="btn btn-sm btn-block btn-danger" onclick="Del_tbody_data_all();"><i class="fas fa-trash"></i> ล้างรายการ</button>
                                             </div>
                                         </div>
                                         <hr>
@@ -131,9 +134,12 @@
                                             <thead>
                                                 <tr class="text-center">
                                                     <th width='10%'>ลำดับ</th>
-                                                    <th width='60%'>รายการ</th>
-                                                    <th width='15%'>จำนวนเงิน</th>
-                                                    <th width='15%'>เครื่องมือ</th>
+                                                    <th width='30%'>รายการ</th>
+                                                    <th width='10%'>ราคา</th>
+                                                    <th width='10%'>จำนวน</th>
+                                                    <th width='10%'>หน่วยนับ</th>
+                                                    <th width='10%'>ราคารวม</th>
+                                                    <th width='10%'>เครื่องมือ</th>
                                                 </tr>
                                             </thead>
                                             <tbody id="table_list_menu_body"></tbody>
@@ -387,8 +393,16 @@
                             </div>
                             <div class="modal-body">
                                 <div class="row">
-                                    <div class="col-md-12">
-                                        <input type="text" class="form-control form-control-sm" id="list_tax" placeholder="กรอก รายการ List">
+                                    <div class="col-md-6">
+                                        <label for="list_tax">ป้อน รายการ</label>
+                                        <input type="text" class="form-control form-control-sm" id="list_tax" placeholder="ป้อน รายการ List">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="list_type">เลือก หน่วยนับ</label>
+                                        <select class="custom-select custom-select-sm" id="list_type">
+                                            <option value="nights">Nights</option>
+                                            <option value="time">Time</option>
+                                        </select>
                                     </div>
                                 </div>
                             </div>
@@ -431,8 +445,9 @@
                                             <thead>
                                                 <tr>
                                                     <th width="5%">No.</th>
-                                                    <th width="55%">List Name</th>
-                                                    <th width="40%" class="text-center">Tool</th>
+                                                    <th width="45%">List Name</th>
+                                                    <th width="20%">Type</th>
+                                                    <th width="20%" class="text-center">Tool</th>
                                                 </tr>
                                             <thead>
                                             <tbody id="table_list_tax_body"><tbody>

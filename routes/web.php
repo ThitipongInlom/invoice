@@ -49,7 +49,6 @@ Route::group(['prefix' => 'api/v1'], function () {
     Route::post('/Del_tbody_data_item_bill', 'page\tax_invoice_bill@Del_tbody_data_item');
     // Del_tbody_data_all
     Route::post('/Del_tbody_data_all', 'page\tax_invoice@Del_tbody_data_all');
-    Route::post('/Del_tbody_data_all_bill', 'page\tax_invoice_bill@Del_tbody_data_all');
     // Get_ create_tax_no
     Route::post('/Get_create_tax_no', 'page\tax_invoice@Get_create_tax_no');
     Route::post('/Get_create_tax_no_bill', 'page\tax_invoice_bill@Get_create_tax_no');
