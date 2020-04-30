@@ -33,7 +33,7 @@
         "datatables.net-responsive-bs4": "^2.2.3",
         "datatables.net-rowgroup-bs4": "^1.1.1",
         "datatables.net-scroller-bs4": "^2.0.1",
-        "jquery": "^3.4.1",
+        "jquery": "^3.5.0",
         "ladda": "^2.0.1",
         "popper.js": "^1.16.1",
         "select2": "^4.0.13",
